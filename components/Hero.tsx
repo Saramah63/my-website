@@ -17,20 +17,23 @@ export default function Hero() {
             {t.hero.title}
           </h1>
 
-          <p className="mt-4 max-w-xl text-slate-600">{t.hero.subtitle}</p>
+          <p className="mt-4 max-w-xl text-slate-600">
+            {t.hero.subtitle}
+          </p>
 
           <div className="mt-8 flex items-center gap-3">
             <a
               href="#get-started"
               className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white hover:bg-blue-700"
             >
-              Get Started
+              {t.hero.primaryCta}
             </a>
+
             <a
               href="#about"
               className="rounded-lg border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
-              Learn More
+              {t.hero.secondaryCta}
             </a>
           </div>
         </div>

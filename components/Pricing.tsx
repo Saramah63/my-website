@@ -1,4 +1,7 @@
+"use client";
+import { useLanguage } from "../lib/LanguageContext";
 export default function Pricing() {
+  const { t } = useLanguage();
   return (
     <section id="pricing" className="border-t bg-slate-50">
       <div className="mx-auto max-w-6xl px-6 py-16">

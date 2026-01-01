@@ -15,7 +15,13 @@ type LanguageContextType = {
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>("en");
+  const getInitialLang = (): Lang => {
+  if (typeof window === "undefined") return "en";
+  const saved = window.localStorage.getItem("lang");
+  return saved === "fa" ? "fa" : "en";
+};
+const [lang, setLang] = useState<Lang>(getInitialLang);
+
 
   const t = useMemo<Dictionary>(() => (lang === "fa" ? (fa as Dictionary) : en), [lang]);
 
@@ -24,6 +30,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const isFa = lang === "fa";
     document.documentElement.lang = isFa ? "fa" : "en";
     document.documentElement.dir = isFa ? "rtl" : "ltr";
+    window.localStorage.setItem("lang", lang);
   }, [lang]);
 
   const value = useMemo(() => ({ lang, setLang, t }), [lang, t]);

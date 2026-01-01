@@ -1,4 +1,8 @@
+"use client";
+import { useLanguage } from "../lib/LanguageContext";
+
 export default function FinalCTA() {
+  const { t } = useLanguage();
   return (
     <section id="get-started" className="border-t bg-blue-600">
       <div className="mx-auto max-w-6xl px-6 py-16 text-white">

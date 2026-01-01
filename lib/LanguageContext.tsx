@@ -1,41 +1,33 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import en, { type Dictionary } from "./i18n/en";
+import React, { createContext, useContext, useMemo, useState } from "react";
+import en from "./i18n/en";
 import fa from "./i18n/fa";
 
 type Lang = "en" | "fa";
+type Dict = typeof en;
 
-type LanguageContextType = {
+type Ctx = {
   lang: Lang;
-  setLang: (lang: Lang) => void;
-  t: Dictionary;
+  setLang: (l: Lang) => void;
+  t: Dict;
+  toggle: () => void;
 };
 
-const LanguageContext = createContext<LanguageContextType | null>(null);
+const LanguageContext = createContext<Ctx | null>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const getInitialLang = (): Lang => {
-  if (typeof window === "undefined") return "en";
-  const saved = window.localStorage.getItem("lang");
-  return saved === "fa" ? "fa" : "en";
-};
-const [lang, setLang] = useState<Lang>(getInitialLang);
+  const [lang, setLang] = useState<Lang>("en");
 
+  const t = useMemo(() => (lang === "fa" ? (fa as Dict) : (en as Dict)), [lang]);
 
-  const t = useMemo<Dictionary>(() => (lang === "fa" ? (fa as Dictionary) : en), [lang]);
+  const toggle = () => setLang((p) => (p === "en" ? "fa" : "en"));
 
-  // Sync <html lang> and direction globally
-  useEffect(() => {
-    const isFa = lang === "fa";
-    document.documentElement.lang = isFa ? "fa" : "en";
-    document.documentElement.dir = isFa ? "rtl" : "ltr";
-    window.localStorage.setItem("lang", lang);
-  }, [lang]);
-
-  const value = useMemo(() => ({ lang, setLang, t }), [lang, t]);
-
-  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
+  return (
+    <LanguageContext.Provider value={{ lang, setLang, t, toggle }}>
+      {children}
+    </LanguageContext.Provider>
+  );
 }
 
 export function useLanguage() {

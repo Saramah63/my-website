@@ -1,3 +1,4 @@
+import Direction from "@/components/Direction";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import About from "../components/About";
@@ -13,6 +14,7 @@ import Agreement from "../components/Agreement";
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
+      <Direction />
       <Header />
       <Hero />
       <About />

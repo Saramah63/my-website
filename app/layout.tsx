@@ -6,11 +6,7 @@ export const metadata = {
   description: "Transform your mindset, transform your life.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>

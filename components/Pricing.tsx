@@ -3,7 +3,8 @@
 import { useLanguage } from "../lib/LanguageContext";
 
 export default function Pricing() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+const isFa = lang === "fa";
 
   const plans = [
     {
@@ -85,8 +86,8 @@ export default function Pricing() {
                 : t.pricing.plans.quarterly;
 
             // If user is in Farsi mode, show FA features; otherwise EN
-            const isFa = typeof document !== "undefined" && document.documentElement.dir === "rtl";
             const features = isFa ? p.featuresFa : p.featuresEn;
+
 
             return (
               <PriceCard

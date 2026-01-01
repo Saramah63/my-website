@@ -1,9 +1,22 @@
 "use client";
 
-import { useLanguage } from "../lib/LanguageContext";
+import { useLanguage } from "@/lib/LanguageContext";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Header() {
-  const { lang, setLang, t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const isFa = lang === "fa";
+
+  const switchTo = (target: "en" | "fa") => {
+    // تبدیل /en/... یا /fa/... به زبان جدید
+    const parts = pathname.split("/").filter(Boolean);
+    if (parts.length === 0) return router.push(`/${target}`);
+    parts[0] = target;
+    router.push("/" + parts.join("/"));
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur">
@@ -17,21 +30,22 @@ export default function Header() {
           <a href="#sessions" className="hover:text-slate-900">{t.nav.sessions}</a>
           <a href="#pricing" className="hover:text-slate-900">{t.nav.pricing}</a>
           <a href="#agreement" className="hover:text-slate-900">{t.nav.agreement}</a>
+          <a href="#what-is-coaching" className="hover:text-slate-900">{t.nav.coaching}</a>
         </nav>
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setLang(lang === "en" ? "fa" : "en")}
+            onClick={() => switchTo(isFa ? "en" : "fa")}
             className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
           >
-            {lang === "en" ? "فارسی" : "English"}
+            {isFa ? "English" : "فارسی"}
           </button>
 
           <a
             href="#get-started"
             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
-            {lang === "en" ? "Get Started" : "شروع کنید"}
+            {t.common.getStarted}
           </a>
         </div>
       </div>

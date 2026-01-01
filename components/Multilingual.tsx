@@ -1,92 +1,54 @@
+"use client";
+
+import { useLanguage } from "@/lib/LanguageContext";
+import Section from "@/components/Section";
+
 export default function Multilingual() {
+  const { t, lang } = useLanguage();
+  const isFa = lang === "fa";
+
   return (
-    <section id="multilingual" className="border-t">
-      <div className="mx-auto max-w-6xl px-6 py-16">
-        {/* Header */}
-        <div className="max-w-2xl">
-          <p className="text-sm font-medium text-blue-700">
-            Multilingual Coaching Services
-          </p>
-          <h2 className="mt-2 text-3xl font-bold text-slate-900">
-            Coaching Without Language Barriers
-          </h2>
-          <p className="mt-4 text-slate-600">
-            As a multilingual coach, I understand the unique challenges of working
-            across cultures and languages. Whether English is your first or second
-            language, you&apos;ll feel comfortable and understood.
-          </p>
+    <Section eyebrow={t.multilingual.eyebrow} title={t.multilingual.title} intro={t.multilingual.intro}>
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="rounded-2xl border border-slate-200 p-6">
+          <h3 className="text-lg font-semibold text-slate-900">{t.multilingual.languagesTitle}</h3>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm text-slate-700">
+              🇬🇧 {t.multilingual.english}
+            </span>
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm text-slate-700">
+              🇮🇷 {t.multilingual.farsi}
+            </span>
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm text-slate-700">
+              {isFa ? "RTL" : "LTR"}
+            </span>
+          </div>
+
+          <h3 className="mt-8 text-lg font-semibold text-slate-900">{t.multilingual.whyTitle}</h3>
+          <ul className="mt-4 list-disc space-y-2 pl-6 text-slate-600">
+            {t.multilingual.reasons.map((r) => (
+              <li key={r}>{r}</li>
+            ))}
+          </ul>
         </div>
 
-        {/* Languages */}
-        <div className="mt-8 flex flex-wrap items-center gap-4">
-          <LangCard title="English" subtitle="Professional" />
-          <LangCard title="فارسی" subtitle="Native" />
-        </div>
+        <div className="rounded-2xl border border-slate-200 p-6">
+          <h3 className="text-lg font-semibold text-slate-900">{t.multilingual.focusTitle}</h3>
+          <div className="mt-4 grid gap-4">
+            {t.multilingual.focus.map((f) => (
+              <div key={f.title} className="rounded-xl bg-slate-50 p-4">
+                <div className="font-semibold text-slate-900">{f.title}</div>
+                <div className="mt-1 text-slate-600">{f.desc}</div>
+              </div>
+            ))}
+          </div>
 
-        {/* Audience */}
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          <Audience
-            title="International Professionals"
-            icon="🌍"
-            text="Navigate career growth in new countries with cultural sensitivity and clarity."
-          />
-          <Audience
-            title="Expats & Immigrants"
-            icon="✈️"
-            text="Adapt to new cultures while staying true to your values and identity."
-          />
-          <Audience
-            title="ESL Professionals"
-            icon="🎓"
-            text="Build confidence in English-speaking environments and professional settings."
-          />
-          <Audience
-            title="Cross-Cultural Leaders"
-            icon="🌉"
-            text="Bridge cultural differences and lead diverse, global teams effectively."
-          />
-        </div>
-
-        {/* Countries */}
-        <div className="mt-12 rounded-2xl border border-slate-200 bg-white p-6">
-          <h3 className="text-lg font-semibold text-slate-900">
-            Serving Clients From
-          </h3>
-          <p className="mt-3 text-slate-600">
-            🇮🇷 🇦🇫 🇹🇯 &nbsp;&nbsp; 🇬🇧 🇩🇪 🇫🇷 🇸🇪 🇫🇮 &nbsp;&nbsp; 🇺🇸 🇨🇦 &nbsp;&nbsp; 🇦🇺 🇳🇿
-          </p>
-          <p className="mt-2 text-sm text-slate-500">
-            Virtual sessions available worldwide • All time zones welcome
-          </p>
+          <div className="mt-8 rounded-xl border border-slate-200 bg-white p-4">
+            <div className="font-semibold text-slate-900">{t.multilingual.servingTitle}</div>
+            <div className="mt-2 text-slate-600">{t.multilingual.serving}</div>
+          </div>
         </div>
       </div>
-    </section>
-  );
-}
-
-function LangCard({ title, subtitle }: { title: string; subtitle: string }) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white px-5 py-3">
-      <div className="text-lg font-semibold text-slate-900">{title}</div>
-      <div className="text-sm text-slate-500">{subtitle}</div>
-    </div>
-  );
-}
-
-function Audience({
-  title,
-  text,
-  icon,
-}: {
-  title: string;
-  text: string;
-  icon: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6">
-      <div className="text-2xl">{icon}</div>
-      <h4 className="mt-3 font-semibold text-slate-900">{title}</h4>
-      <p className="mt-2 text-sm text-slate-600">{text}</p>
-    </div>
+    </Section>
   );
 }

@@ -1,193 +1,59 @@
 "use client";
 
-import { useLanguage } from "../lib/LanguageContext";
+import { useLanguage } from "@/lib/LanguageContext";
+import Section from "@/components/Section";
 
-export default function Pricing() {
-  const { t, lang } = useLanguage();
-const isFa = lang === "fa";
-
-  const plans = [
-    {
-      key: "single",
-      highlight: false,
-      badge: "",
-      featuresEn: [
-        "60-minute coaching session",
-        "Pre-session preparation form",
-        "Post-session summary",
-      ],
-      featuresFa: [
-        "جلسه ۶۰ دقیقه‌ای کوچینگ",
-        "فرم آماده‌سازی قبل از جلسه",
-        "خلاصه جلسه بعد از پایان",
-      ],
-    },
-    {
-      key: "monthly",
-      highlight: true,
-      badge: "Most Popular",
-      featuresEn: [
-        "4 coaching sessions (60 min each)",
-        "Pre-session preparation forms",
-        "Email support between sessions",
-        "Progress tracking",
-        "15% savings vs single sessions",
-      ],
-      featuresFa: [
-        "۴ جلسه کوچینگ (هر کدام ۶۰ دقیقه)",
-        "فرم‌های آماده‌سازی قبل از جلسات",
-        "پشتیبانی ایمیلی بین جلسات",
-        "پیگیری پیشرفت",
-        "۱۵٪ صرفه‌جویی نسبت به جلسه تکی",
-      ],
-    },
-    {
-      key: "quarterly",
-      highlight: false,
-      badge: "Best Value",
-      featuresEn: [
-        "12 coaching sessions (60 min each)",
-        "Initial goal-setting intensive",
-        "Mid-point progress review",
-        "Priority email support",
-        "Custom resources & tools",
-        "25% savings vs single sessions",
-      ],
-      featuresFa: [
-        "۱۲ جلسه کوچینگ (هر کدام ۶۰ دقیقه)",
-        "جلسه فشرده تعیین هدف اولیه",
-        "مرور پیشرفت در میانه مسیر",
-        "پشتیبانی ایمیلی اولویت‌دار",
-        "ابزارها و منابع اختصاصی",
-        "۲۵٪ صرفه‌جویی نسبت به جلسه تکی",
-      ],
-    },
-  ] as const;
-
-  return (
-    <section id="pricing" className="border-t bg-slate-50">
-      <div className="mx-auto max-w-6xl px-6 py-16">
-        {/* Header */}
-        <div className="max-w-2xl">
-          <p className="text-sm font-medium text-blue-700">{t.pricing.title}</p>
-          <h2 className="mt-2 text-3xl font-bold text-slate-900">
-            {t.pricing.subtitle}
-          </h2>
-        </div>
-
-        {/* Cards */}
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {plans.map((p) => {
-            const plan =
-              p.key === "single"
-                ? t.pricing.plans.single
-                : p.key === "monthly"
-                ? t.pricing.plans.monthly
-                : t.pricing.plans.quarterly;
-
-            // If user is in Farsi mode, show FA features; otherwise EN
-            const features = isFa ? p.featuresFa : p.featuresEn;
-
-
-            return (
-              <PriceCard
-                key={p.key}
-                title={plan.name}
-                price={plan.price}
-                subtitle={plan.note}
-                highlight={p.highlight}
-                badge={p.badge ? (isFa ? translateBadgeFa(p.badge) : p.badge) : undefined}
-                features={features}
-                cta={t.pricing.cta}
-              />
-            );
-          })}
-        </div>
-
-        {/* Policies */}
-        <div className="mt-14 grid gap-6 md:grid-cols-2">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6">
-            <h3 className="font-semibold text-slate-900">
-              {isRtl() ? "سیاست‌های انعطاف‌پذیر" : "Flexible Policies"}
-            </h3>
-            <ul className="mt-3 space-y-2 text-sm text-slate-600">
-              <li>
-                • {isRtl() ? "امکان تغییر زمان با اطلاع ۲۴ ساعت قبل" : "24-hour notice for rescheduling"}
-              </li>
-              <li>
-                • {isRtl() ? "بازپرداخت جلسات استفاده‌نشده تا ۳۰ روز" : "Unused sessions refundable within 30 days"}
-              </li>
-              <li>
-                • {isRtl() ? "تعداد محدود اسلایدینگ‌اسکیل برای شرایط خاص" : "Sliding scale options available"}
-              </li>
-            </ul>
-          </div>
-
-          <div className="rounded-2xl border border-slate-200 bg-white p-6">
-            <h3 className="font-semibold text-slate-900">
-              {isRtl() ? "روش‌های پرداخت" : "Payment Methods"}
-            </h3>
-            <ul className="mt-3 space-y-2 text-sm text-slate-600">
-              <li>• {isRtl() ? "کارت بانکی" : "Credit card"}</li>
-              <li>• {isRtl() ? "انتقال بانکی" : "Bank transfer"}</li>
-              <li>• PayPal</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PriceCard({
-  title,
+function PlanCard({
+  label,
+  name,
   price,
-  subtitle,
-  features,
+  period,
+  bullets,
+  primary,
   cta,
-  highlight,
-  badge,
 }: {
-  title: string;
+  label?: string;
+  name: string;
   price: string;
-  subtitle: string;
-  features: string[];
+  period: string;
+  bullets: string[];
+  primary?: boolean;
   cta: string;
-  highlight?: boolean;
-  badge?: string;
 }) {
   return (
     <div
-      className={`relative rounded-2xl border p-6 ${
-        highlight ? "border-blue-600 bg-white shadow-lg" : "border-slate-200 bg-white"
-      }`}
+      className={[
+        "relative rounded-2xl border p-6",
+        primary ? "border-blue-600 shadow-md" : "border-slate-200",
+      ].join(" ")}
     >
-      {badge && (
-        <div className="absolute -top-3 left-6 rounded-full bg-blue-600 px-3 py-1 text-xs font-medium text-white">
-          {badge}
+      {label ? (
+        <div className="absolute -top-3 left-6 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
+          {label}
         </div>
-      )}
+      ) : null}
 
-      <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
+      <div className="text-sm font-semibold text-slate-500">{name}</div>
+      <div className="mt-2 text-3xl font-bold text-slate-900">{price}</div>
+      <div className="mt-1 text-sm text-slate-600">{period}</div>
 
-      <div className="mt-3">
-        <span className="text-3xl font-bold text-slate-900">{price}</span>
-        <span className="ml-1 text-sm text-slate-500">{subtitle}</span>
-      </div>
-
-      <ul className="mt-5 space-y-2 text-sm text-slate-600">
-        {features.map((f) => (
-          <li key={f}>• {f}</li>
+      <ul className="mt-6 space-y-2 text-slate-700">
+        {bullets.map((b) => (
+          <li key={b} className="flex gap-2">
+            <span className="mt-1 inline-block h-2 w-2 rounded-full bg-blue-600" />
+            <span>{b}</span>
+          </li>
         ))}
       </ul>
 
       <a
         href="#get-started"
-        className={`mt-6 inline-flex w-full items-center justify-center rounded-lg px-4 py-3 text-sm font-semibold ${
-          highlight
+        className={[
+          "mt-6 inline-flex w-full items-center justify-center rounded-lg px-4 py-3 text-sm font-medium",
+          primary
             ? "bg-blue-600 text-white hover:bg-blue-700"
-            : "border border-slate-200 text-slate-900 hover:bg-slate-50"
-        }`}
+            : "border border-slate-200 text-slate-700 hover:bg-slate-50",
+        ].join(" ")}
       >
         {cta}
       </a>
@@ -195,13 +61,61 @@ function PriceCard({
   );
 }
 
-function isRtl() {
-  if (typeof document === "undefined") return false;
-  return document.documentElement.dir === "rtl";
-}
+export default function Pricing() {
+  const { t } = useLanguage();
 
-function translateBadgeFa(badge: string) {
-  if (badge === "Most Popular") return "محبوب‌ترین";
-  if (badge === "Best Value") return "به‌صرفه‌ترین";
-  return badge;
+  const { single, monthly, quarterly } = t.pricing.plans;
+
+  return (
+    <Section eyebrow={t.pricing.eyebrow} title={t.pricing.title} intro={t.pricing.intro}>
+      <div className="grid gap-6 md:grid-cols-3">
+        <PlanCard
+          name={quarterly.name}
+          price={quarterly.price}
+          period={quarterly.period}
+          bullets={quarterly.bullets}
+          label={t.pricing.labels.bestValue}
+          cta={quarterly.cta}
+        />
+
+        <PlanCard
+          name={monthly.name}
+          price={monthly.price}
+          period={monthly.period}
+          bullets={monthly.bullets}
+          label={t.pricing.labels.mostPopular}
+          primary
+          cta={monthly.cta}
+        />
+
+        <PlanCard
+          name={single.name}
+          price={single.price}
+          period={single.period}
+          bullets={single.bullets}
+          cta={single.cta}
+        />
+      </div>
+
+      <div className="mt-10 grid gap-6 md:grid-cols-2">
+        <div className="rounded-2xl border border-slate-200 p-6">
+          <div className="text-lg font-semibold text-slate-900">{t.pricing.paymentsTitle}</div>
+          <ul className="mt-4 list-disc space-y-2 pl-6 text-slate-600">
+            {t.pricing.payments.map((p) => (
+              <li key={p}>{p}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 p-6">
+          <div className="text-lg font-semibold text-slate-900">{t.pricing.policiesTitle}</div>
+          <ul className="mt-4 list-disc space-y-2 pl-6 text-slate-600">
+            {t.pricing.policy.map((p) => (
+              <li key={p}>{p}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </Section>
+  );
 }

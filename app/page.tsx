@@ -8,6 +8,7 @@ import Testimonials from "../components/Testimonials";
 import Pricing from "../components/Pricing";
 import FinalCTA from "../components/FinalCTA";
 import Footer from "../components/Footer";
+import Agreement from "../components/Agreement";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <HowItWorks />
       <Testimonials />
       <Pricing />
+      <Agreement />
       <FinalCTA />
 <Footer />
   

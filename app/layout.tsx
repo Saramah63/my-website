@@ -1,18 +1,14 @@
-import type { Metadata } from "next";
 import "./globals.css";
-import { LanguageProvider } from "@/lib/LanguageContext";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Mindshift for Lifeshift",
-  description: "Transform your mindset, transform your life.",
+  metadataBase: new URL("https://www.saramahmodi.com"),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" dir="ltr">
-      <body>
-        <LanguageProvider>{children}</LanguageProvider>
-      </body>
+    <html>
+      <body>{children}</body>
     </html>
   );
 }

@@ -11,7 +11,6 @@ export default function Header() {
   const isFa = lang === "fa";
 
   const switchTo = (target: "en" | "fa") => {
-    // تبدیل /en/... یا /fa/... به زبان جدید
     const parts = pathname.split("/").filter(Boolean);
     if (parts.length === 0) return router.push(`/${target}`);
     parts[0] = target;
@@ -30,7 +29,6 @@ export default function Header() {
           <a href="#sessions" className="hover:text-slate-900">{t.nav.sessions}</a>
           <a href="#pricing" className="hover:text-slate-900">{t.nav.pricing}</a>
           <a href="#agreement" className="hover:text-slate-900">{t.nav.agreement}</a>
-          <a href="#what-is-coaching" className="hover:text-slate-900">{t.nav.coaching}</a>
         </nav>
 
         <div className="flex items-center gap-3">

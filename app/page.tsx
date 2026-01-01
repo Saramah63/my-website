@@ -1,5 +1,7 @@
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
+import Header from "../components/Header";
+import Hero from "../components/Hero";
+import About from "../components/About";
+import WhatIsCoaching from "../components/WhatIsCoaching";
 
 export default function Home() {
   return (
@@ -7,6 +9,7 @@ export default function Home() {
       <Header />
       <Hero />
       <About />
+      <WhatIsCoaching />
 
       {/* placeholders */}
       <section id="about" className="mx-auto max-w-6xl px-6 py-16">
@@ -31,5 +34,5 @@ export default function Home() {
     </main>
   );
 }
-import About from "@/components/About";
+
 

@@ -1,35 +1,78 @@
 "use client";
 
-import { useLanguage } from "@/lib/LanguageContext";
-import Section from "@/components/Section";
+import React, { useMemo } from "react";
+import { useLanguage } from "../lib/LanguageContext";
 
-export default function HowItWorks() {
-  const { t } = useLanguage();
+export default function HowitWorks() {
+  const { lang } = useLanguage();
+  const isFa = lang === "fa";
+  const dir = isFa ? "rtl" : "ltr";
+
+  const c = useMemo(() => {
+    return {
+      kicker: isFa ? "چطور کار می‌کنیم" : "How it works",
+      title: isFa ? "سه مرحله ساده، نتیجه واقعی" : "Three simple steps, real outcomes",
+      steps: isFa
+        ? [
+            {
+              t: "۱) شفاف‌سازی هدف",
+              d: "با چند سوال دقیق، مسئله اصلی، هدف واقعی و معیار موفقیت را مشخص می‌کنیم.",
+            },
+            {
+              t: "۲) برنامه اقدام",
+              d: "یک نقشه سبک اما قابل‌اجرا می‌سازیم: کارهای هفته، عادت‌ها، و نقاط کنترل.",
+            },
+            {
+              t: "۳) پیگیری و اصلاح مسیر",
+              d: "جلسه به جلسه پیشرفت را اندازه می‌گیریم و مسیر را بر اساس واقعیت تنظیم می‌کنیم.",
+            },
+          ]
+        : [
+            {
+              t: "1) Clarity & goal definition",
+              d: "We pinpoint the real problem, the true goal, and the success metrics.",
+            },
+            {
+              t: "2) Action plan",
+              d: "We build a lightweight but executable plan: weekly actions, habits, and checkpoints.",
+            },
+            {
+              t: "3) Track & iterate",
+              d: "We measure progress and adjust based on what’s actually happening in your life.",
+            },
+          ],
+      note: isFa
+        ? "هدف: شما بعد از هر جلسه دقیقاً می‌دانید گام بعدی چیست."
+        : "Outcome: after each session you know exactly what to do next.",
+      cta: isFa ? "رزرو جلسه" : "Book a session",
+    };
+  }, [isFa]);
 
   return (
-    <Section eyebrow={t.howItWorks.eyebrow} title={t.howItWorks.title} intro={t.howItWorks.intro}>
-      <div className="grid gap-4 md:grid-cols-4">
-        {t.howItWorks.steps.map((s) => (
-          <div key={s.n} className="rounded-2xl border border-slate-200 p-6">
-            <div className="text-sm font-semibold text-slate-500">{s.n}</div>
-            <div className="mt-2 font-semibold text-slate-900">{s.title}</div>
-            <div className="mt-2 text-slate-600">{s.desc}</div>
-          </div>
-        ))}
-      </div>
+    <section id="how-it-works" className="section" dir={dir}>
+      <div className="container">
+        <div className="sectionHead">
+          <div className="kicker">{c.kicker}</div>
+          <h2 className="h2">{c.title}</h2>
+          <p className="muted">{c.note}</p>
+        </div>
 
-      <div className="mt-10 rounded-2xl border border-slate-200 p-6">
-        <div className="text-lg font-semibold text-slate-900">{t.howItWorks.sessionFlowTitle}</div>
-        <div className="mt-4 grid gap-3 md:grid-cols-5">
-          {t.howItWorks.flow.map((f) => (
-            <div key={f.t} className="rounded-xl bg-slate-50 p-4">
-              <div className="text-sm font-semibold text-slate-500">{f.m}</div>
-              <div className="mt-1 font-semibold text-slate-900">{f.t}</div>
-              <div className="mt-1 text-sm text-slate-600">{f.d}</div>
+        <div className="grid3">
+          {c.steps.map((s) => (
+            <div key={s.t} className="card stepCard">
+              <div className="stepIcon" aria-hidden="true" />
+              <h3 className="h3">{s.t}</h3>
+              <p className="muted">{s.d}</p>
             </div>
           ))}
         </div>
+
+        <div style={{ marginTop: 18 }}>
+          <a className="btn btnPrimary" href="#booking">
+            {c.cta}
+          </a>
+        </div>
       </div>
-    </Section>
+    </section>
   );
 }

@@ -1,36 +1,60 @@
-import Header from "@/components/Header";
+// app/[lang]/page.tsx
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import HowItWorks from "@/components/HowItWorks";
 import Pricing from "@/components/Pricing";
+import Sessions from "@/components/Sessions";
+import Testimonials from "@/components/Testimonials";
 import Agreement from "@/components/Agreement";
-import Footer from "@/components/Footer";
+import FeedbackForm from "@/components/FeedbackForm";
+import TestimonialHighlight from "@/components/TestimonialHighlight";
+import Booking from "@/components/Booking";
 
-export default function Page() {
+type Lang = "fa" | "en";
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang: raw } = await params;
+  const lang: Lang = raw === "fa" ? "fa" : "en";
+
   return (
-    <main className="min-h-screen bg-white">
-      <Header />
+    <main>
       <Hero />
+      <TestimonialHighlight lang={lang} />
 
       <section id="about">
         <About />
       </section>
 
-      {/* FIX: اگر Sessions کلیک می‌شود و چیزی نمی‌آید، حتماً باید یک section با id=sessions وجود داشته باشد */}
-      <section id="sessions" className="mx-auto max-w-6xl px-6 py-16">
-        {/* اگر کامپوننت Sessions داری اینجا بگذار: <Sessions /> */}
-        <h2 className="text-2xl font-bold text-slate-900">Sessions</h2>
+      <section id="how-it-works">
+        <HowItWorks />
       </section>
 
       <section id="pricing">
         <Pricing />
       </section>
 
+      <section id="booking">
+        <Booking />
+      </section>
+
+      <section id="sessions">
+        <Sessions />
+      </section>
+
+      <section id="testimonials">
+        <Testimonials />
+      </section>
+
       <section id="agreement">
         <Agreement />
       </section>
 
-      <section id="get-started">
-        <Footer />
+      <section id="feedback">
+        <FeedbackForm />
       </section>
     </main>
   );

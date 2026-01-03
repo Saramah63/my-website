@@ -1,70 +1,90 @@
 "use client";
 
-import { useLanguage } from "@/lib/LanguageContext";
+import { usePathname } from "next/navigation";
+import FadeUp from "./motion/FadeUp";
 
 export default function Hero() {
-  const { t } = useLanguage();
+  const pathname = usePathname();
+  const isFa = pathname.startsWith("/fa");
+  const CALENDLY = "https://calendly.com/saramah63/30min";
+  const highlight = (isFa: boolean) => ({
+  name: isFa ? "زهره - کوچ" : "Zohreh — Coach",
+  quote: isFa
+    ? "سارا به طور شگفت انگیزی پذیرش بالایی داره. فکر می کنم هر موقعیت به ظاهر عجیبی رو به سرعت هضم می کنه و مراجع رو در فضای امنی می پذیره. همدلی بالایی داره و همیشه هم سعی می کنه خودش رو اپدیت کنه. اینها و سوالات تحلیلی خوبش باعث شد من در شرایطی که بودم جهت بگیرم و راهم قابل پذیرش تر و روشن تر بشه."
+    : "Sara has an amazingly high level of acceptance. I think she quickly processes any seemingly unusual situation and welcomes the client in a safe space. She has strong empathy and always tries to keep herself updated. These, along with her good analytical questions, helped me find direction in my situation and made my path more acceptable and clearer.",
+});
+
+  const t = isFa
+    ? {
+        badge: "کوچینگ حرفه‌ای | آنلاین و بین‌المللی",
+        title: "تغییر ذهن = تغییر زندگی",
+        subtitle:
+          "جلسات کوچینگ نتیجه‌محور برای شفاف‌سازی هدف، ایجاد عادت‌های پایدار، و ساخت مسیر رشد شخصی و حرفه‌ای.",
+        trust: "⭐ 4.9/5 — پاسخ‌گویی زیر ۲۴ ساعت — کاملاً محرمانه",
+        cta: "رزرو جلسه رایگان",
+        cta2: "مشاهده تعرفه‌ها",
+      }
+    : {
+        badge: "Professional Coaching | Online Worldwide",
+        title: "MindShift = LifeShift",
+        subtitle:
+          "Outcome-driven coaching to clarify goals, build sustainable habits, and accelerate personal & professional growth.",
+        trust: "⭐ 4.9/5 — Response < 24h — Fully confidential",
+        cta: "Book Free Session",
+        cta2: "View Pricing",
+      };
 
   return (
-    <section className="border-b bg-white">
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 md:grid-cols-2">
-        <div>
-          <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm text-slate-700">
-            {t.hero.badge}
-          </div>
+    <section className="hero">
+      <div className="container heroInner">
+        <div className="heroLeft">
+          <FadeUp>
+            <div className="pill">{t.badge}</div>
+          </FadeUp>
 
-          <h1 className="mt-5 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
-            {t.hero.title}
-          </h1>
+          <FadeUp delay={80}>
+            <h1 className="heroTitle">{t.title}</h1>
+          </FadeUp>
 
-          <p className="mt-4 max-w-xl text-slate-600">{t.hero.subtitle}</p>
+          <FadeUp delay={140}>
+            <p className="heroSubtitle">{t.subtitle}</p>
+          </FadeUp>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#get-started"
-              className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white hover:bg-blue-700"
-            >
-              {t.common.startYourJourney}
-            </a>
-            <a
-              href="#what-is-coaching"
-              className="rounded-lg border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
-            >
-              {t.common.learnMore}
-            </a>
-          </div>
+          <FadeUp delay={200}>
+            <div className="trustStrip">{t.trust}</div>
+          </FadeUp>
 
-          <div className="mt-10 grid grid-cols-3 gap-6">
-            <div>
-              <div className="text-2xl font-bold text-slate-900">{t.hero.stats.clientsValue}</div>
-              <div className="text-sm text-slate-600">{t.hero.stats.clients}</div>
+          <FadeUp delay={260}>
+            <div className="heroActions">
+              <a className="button buttonPrimary" href={CALENDLY} target="_blank" rel="noreferrer">
+                {t.cta}
+              </a>
+              <a className="button buttonGhost" href="#pricing">
+                {t.cta2}
+              </a>
             </div>
-            <div>
-              <div className="text-2xl font-bold text-slate-900">{t.hero.stats.yearsValue}</div>
-              <div className="text-sm text-slate-600">{t.hero.stats.years}</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-slate-900">{t.hero.stats.successValue}</div>
-              <div className="text-sm text-slate-600">{t.hero.stats.success}</div>
-            </div>
-          </div>
+          </FadeUp>
         </div>
 
-        <div className="relative">
-          <div className="aspect-square w-full rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 shadow-lg" />
-          <div className="pointer-events-none absolute right-6 top-6 rounded-xl bg-white/90 px-4 py-3 text-sm shadow">
-            <div className="font-medium text-slate-900">{t.hero.clientSuccess}</div>
-            <div className="text-slate-700">⭐ {t.hero.rating}</div>
-          </div>
-          <div className="pointer-events-none absolute bottom-6 left-6 rounded-xl bg-white/90 px-4 py-3 text-sm shadow">
-            <div className="text-slate-600">{t.hero.nextAvailable}</div>
-            <div className="font-medium text-slate-900">{t.hero.thisWeek}</div>
-          </div>
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <div className="rounded-2xl bg-white/10 px-6 py-4 text-center text-white">
-              <div className="text-lg font-semibold">{t.hero.rightCardTitle}</div>
+        <div className="heroRight">
+          <FadeUp delay={160}>
+            <div className="heroCard">
+              <div className="heroCardTitle">{isFa ? "رزرو سریع" : "Quick Booking"}</div>
+              <div className="heroCardText">
+                {isFa
+                  ? "جلسه ۳۰ دقیقه‌ای رایگان برای شروع. از همین‌جا مستقیم وارد Calendly شو."
+                  : "Free 30-min intro session. Jump directly to Calendly to book."}
+              </div>
+              <a
+                className="btn btnPrimary"
+                href={CALENDLY}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {isFa ? "رزرو جلسه رایگان" : "Book Free Session"}
+              </a>
             </div>
-          </div>
+          </FadeUp>
         </div>
       </div>
     </section>

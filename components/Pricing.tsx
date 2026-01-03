@@ -1,121 +1,128 @@
 "use client";
 
-import { useLanguage } from "@/lib/LanguageContext";
-import Section from "@/components/Section";
-
-function PlanCard({
-  label,
-  name,
-  price,
-  period,
-  bullets,
-  primary,
-  cta,
-}: {
-  label?: string;
-  name: string;
-  price: string;
-  period: string;
-  bullets: string[];
-  primary?: boolean;
-  cta: string;
-}) {
-  return (
-    <div
-      className={[
-        "relative rounded-2xl border p-6",
-        primary ? "border-blue-600 shadow-md" : "border-slate-200",
-      ].join(" ")}
-    >
-      {label ? (
-        <div className="absolute -top-3 left-6 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
-          {label}
-        </div>
-      ) : null}
-
-      <div className="text-sm font-semibold text-slate-500">{name}</div>
-      <div className="mt-2 text-3xl font-bold text-slate-900">{price}</div>
-      <div className="mt-1 text-sm text-slate-600">{period}</div>
-
-      <ul className="mt-6 space-y-2 text-slate-700">
-        {bullets.map((b) => (
-          <li key={b} className="flex gap-2">
-            <span className="mt-1 inline-block h-2 w-2 rounded-full bg-blue-600" />
-            <span>{b}</span>
-          </li>
-        ))}
-      </ul>
-
-      <a
-        href="#get-started"
-        className={[
-          "mt-6 inline-flex w-full items-center justify-center rounded-lg px-4 py-3 text-sm font-medium",
-          primary
-            ? "bg-blue-600 text-white hover:bg-blue-700"
-            : "border border-slate-200 text-slate-700 hover:bg-slate-50",
-        ].join(" ")}
-      >
-        {cta}
-      </a>
-    </div>
-  );
-}
+import React from "react";
+import { useLanguage } from "../lib/LanguageContext";
 
 export default function Pricing() {
-  const { t } = useLanguage();
+  const { lang } = useLanguage();
+  const isFa = lang === "fa";
 
-  const { single, monthly, quarterly } = t.pricing.plans;
+  const title = isFa ? "پکیج‌ها و تعرفه‌ها" : "Pricing & Packages";
+  const subtitle = isFa
+    ? "پکیجی را انتخاب کن که با مسیر رشد تو هماهنگ است."
+    : "Choose the plan that fits your growth journey.";
+
+  const cards = isFa
+    ? [
+        {
+          badge: "Best Value",
+          name: "پکیج سه‌ماهه",
+          price: "$1,350",
+          note: "برای ۳ ماه",
+          items: [
+            "۱۲ جلسه ۶۰ دقیقه‌ای",
+            "جلسه هدف‌گذاری عمیق",
+            "بررسی پیشرفت در میانه مسیر",
+            "پشتیبانی ایمیلی اولویت‌دار",
+            "منابع و ابزارهای اختصاصی",
+            "۲۵٪ صرفه‌جویی نسبت به تک‌جلسه",
+          ],
+          primary: false,
+        },
+        {
+          badge: "Most Popular",
+          name: "پکیج ماهانه",
+          price: "$500",
+          note: "در ماه",
+          items: [
+            "۴ جلسه ۶۰ دقیقه‌ای",
+            "فرم آماده‌سازی قبل جلسه",
+            "پشتیبانی ایمیلی بین جلسات",
+            "پیگیری پیشرفت",
+            "۱۵٪ صرفه‌جویی نسبت به تک‌جلسه",
+          ],
+          primary: true,
+        },
+        {
+          badge: "",
+          name: "جلسه تکی",
+          price: "$150",
+          note: "هر جلسه",
+          items: ["جلسه ۶۰ دقیقه‌ای", "فرم آماده‌سازی قبل جلسه", "خلاصه پس از جلسه"],
+          primary: false,
+        },
+      ]
+    : [
+        {
+          badge: "Best Value",
+          name: "3-Month Package",
+          price: "$1,350",
+          note: "for 3 months",
+          items: [
+            "12× 60-min sessions",
+            "Deep goal-setting intensive",
+            "Mid-point progress review",
+            "Priority email support",
+            "Custom resources & tools",
+            "25% savings vs single sessions",
+          ],
+          primary: false,
+        },
+        {
+          badge: "Most Popular",
+          name: "Monthly Package",
+          price: "$500",
+          note: "per month",
+          items: [
+            "4× 60-min sessions",
+            "Pre-session preparation form",
+            "Email support between sessions",
+            "Progress tracking",
+            "15% savings vs single sessions",
+          ],
+          primary: true,
+        },
+        {
+          badge: "",
+          name: "Single Session",
+          price: "$150",
+          note: "per session",
+          items: ["60-min coaching session", "Pre-session form", "Post-session summary"],
+          primary: false,
+        },
+      ];
 
   return (
-    <Section eyebrow={t.pricing.eyebrow} title={t.pricing.title} intro={t.pricing.intro}>
-      <div className="grid gap-6 md:grid-cols-3">
-        <PlanCard
-          name={quarterly.name}
-          price={quarterly.price}
-          period={quarterly.period}
-          bullets={quarterly.bullets}
-          label={t.pricing.labels.bestValue}
-          cta={quarterly.cta}
-        />
-
-        <PlanCard
-          name={monthly.name}
-          price={monthly.price}
-          period={monthly.period}
-          bullets={monthly.bullets}
-          label={t.pricing.labels.mostPopular}
-          primary
-          cta={monthly.cta}
-        />
-
-        <PlanCard
-          name={single.name}
-          price={single.price}
-          period={single.period}
-          bullets={single.bullets}
-          cta={single.cta}
-        />
-      </div>
-
-      <div className="mt-10 grid gap-6 md:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 p-6">
-          <div className="text-lg font-semibold text-slate-900">{t.pricing.paymentsTitle}</div>
-          <ul className="mt-4 list-disc space-y-2 pl-6 text-slate-600">
-            {t.pricing.payments.map((p) => (
-              <li key={p}>{p}</li>
-            ))}
-          </ul>
+    <section id="pricing" className="section">
+      <div className="container">
+        <div className="sectionHead">
+          <h2 className="h2">{title}</h2>
+          <p className="muted">{subtitle}</p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 p-6">
-          <div className="text-lg font-semibold text-slate-900">{t.pricing.policiesTitle}</div>
-          <ul className="mt-4 list-disc space-y-2 pl-6 text-slate-600">
-            {t.pricing.policy.map((p) => (
-              <li key={p}>{p}</li>
-            ))}
-          </ul>
+        <div className="pricingGrid">
+          {cards.map((c) => (
+            <div key={c.name} className={`priceCard ${c.primary ? "isPopular" : ""}`}>
+              {c.badge ? <div className="pill">{c.badge}</div> : <div style={{ height: 28 }} />}
+              <h3 className="h3">{c.name}</h3>
+              <div className="priceRow">
+                <div className="price">{c.price}</div>
+                <div className="muted">{c.note}</div>
+              </div>
+
+              <ul className="list">
+                {c.items.map((it) => (
+                  <li key={it}>{it}</li>
+                ))}
+              </ul>
+
+              <a className={`btn ${c.primary ? "btnPrimary" : "btnGhost"}`} href="#booking">
+                {isFa ? "رزرو" : "Book"}
+              </a>
+            </div>
+          ))}
         </div>
       </div>
-    </Section>
+    </section>
   );
 }

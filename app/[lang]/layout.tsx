@@ -1,72 +1,57 @@
+// app/[lang]/layout.tsx
 import type { Metadata } from "next";
-import "../globals.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { LanguageProvider } from "@/lib/LanguageContext";
 
-type Lang = "en" | "fa";
-
-export function generateStaticParams() {
-  return [{ lang: "en" }, { lang: "fa" }];
-}
+type Lang = "fa" | "en";
 
 export async function generateMetadata({
   params,
 }: {
-  params: { lang: Lang };
+  params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
-  const isFa = params.lang === "fa";
-
-  const base = new URL("https://www.saramahmodi.com");
-  const canonical = new URL(`/${params.lang}`, base);
+  const { lang: raw } = await params;
+  const lang: Lang = raw === "fa" ? "fa" : "en";
+  const isFa = lang === "fa";
 
   const title = isFa
-    ? "Mindshift for Lifeshift | کوچینگ تحول ذهن و زندگی"
-    : "Mindshift for Lifeshift | Mindset & Life Coaching";
+    ? "سارا محمودی | کوچینگ رشد فردی و شفافیت (آنلاین)"
+    : "Sara Mahmodi | Professional Coaching (Online)";
 
   const description = isFa
-    ? "کوچینگ حرفه‌ای دو‌زبانه برای تغییر ذهنیت، رشد فردی و پیشرفت شغلی. جلسات آنلاین جهانی."
-    : "Bilingual coaching to transform your mindset, accelerate personal growth, and advance your career. Global online sessions.";
+    ? "کوچینگ نتیجه‌محور برای شفاف‌سازی هدف‌ها، ساخت عادت‌های پایدار و رشد شخصی. رزرو جلسه معرفی ۳۰ دقیقه‌ای در کالندلی."
+    : "Outcome-driven coaching to clarify goals, build sustainable habits, and accelerate personal growth. Book a 30-min intro via Calendly.";
+
+  const url = `/${lang}`;
 
   return {
-    metadataBase: base,
     title,
     description,
     alternates: {
-      canonical,
-      languages: {
-        en: new URL("/en", base),
-        fa: new URL("/fa", base),
-      },
+      canonical: url,
+      languages: { fa: "/fa", en: "/en" },
     },
-    openGraph: {
-      type: "website",
-      url: canonical,
-      siteName: "Mindshift for Lifeshift",
-      title,
-      description,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-    robots: { index: true, follow: true },
+    openGraph: { title, description, url, type: "website" },
   };
 }
 
-export default function LangLayout({
+export default async function LangLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { lang: Lang };
+  params: Promise<{ lang: string }>;
 }) {
-  const isFa = params.lang === "fa";
+  const { lang: raw } = await params;
+  const lang: Lang = raw === "fa" ? "fa" : "en";
+  const dir = lang === "fa" ? "rtl" : "ltr";
 
   return (
-    <html lang={params.lang} dir={isFa ? "rtl" : "ltr"}>
-      <body>
-        <LanguageProvider initialLang={params.lang}>{children}</LanguageProvider>
-      </body>
-    </html>
+        <LanguageProvider initialLang={lang}>
+          <Header />
+          {children}
+          <Footer />
+        </LanguageProvider>
   );
 }

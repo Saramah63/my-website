@@ -1,27 +1,45 @@
 "use client";
 
-import { useLanguage } from "@/lib/LanguageContext";
-import Section from "@/components/Section";
+import { usePathname } from "next/navigation";
+import AgreementForm from "./AgreementForm";
 
 export default function Agreement() {
-  const { t } = useLanguage();
+  const pathname = usePathname();
+  const isFa = pathname === "/fa" || pathname.startsWith("/fa/");
+  const dir = isFa ? "rtl" : "ltr";
+
+  const pdfHref = isFa
+    ? "/agreements/agreement-fa.pdf"
+    : "/agreements/agreement-en.pdf";
 
   return (
-    <Section eyebrow={t.agreement.eyebrow} title={t.agreement.title} intro={t.agreement.intro}>
-      <div className="rounded-2xl border border-slate-200 p-6">
-        <ul className="list-disc space-y-2 pl-6 text-slate-700">
-          {t.agreement.bullets.map((b) => (
-            <li key={b}>{b}</li>
-          ))}
-        </ul>
+    <section className="section" id="agreement" dir={dir}>
+      <div className="container">
+        <div className="sectionHead">
+          <div className="kicker">{isFa ? "قرارداد" : "Agreement"}</div>
+          <h2 className="h2">{isFa ? "قرارداد کوچینگ" : "Coaching Agreement"}</h2>
+          <p className="muted">
+            {isFa
+              ? "می‌تونی فایل قرارداد را دانلود/باز کنی و همین‌جا آنلاین هم اطلاعات را ثبت و امضا کنی."
+              : "You can open/download the agreement PDF and also submit/sign online below."}
+          </p>
+        </div>
 
-        <a
-          href="/api/agreement"
-          className="mt-6 inline-flex rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white hover:bg-blue-700"
-        >
-          {t.agreement.downloadBtn}
-        </a>
+        <div className="card" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <a className="btn" href={pdfHref} target="_blank" rel="noopener noreferrer">
+            {isFa ? "باز کردن PDF قرارداد" : "Open Agreement PDF"}
+          </a>
+
+          <a className="btn" href={pdfHref} download>
+            {isFa ? "دانلود PDF" : "Download PDF"}
+          </a>
+        </div>
+
+        <div style={{ height: 18 }} />
+
+        {/* فرم آنلاین */}
+        <AgreementForm lang={isFa ? "fa" : "en"} />
       </div>
-    </Section>
+    </section>
   );
 }

@@ -1,268 +1,128 @@
 const en = {
+  brand: "MindShift for LifeShift",
   nav: {
     about: "About",
     sessions: "Sessions",
     pricing: "Pricing",
     agreement: "Agreement",
-    coaching: "Coaching",
-  },
-
-  common: {
     getStarted: "Get Started",
-    learnMore: "Learn More",
-    startYourJourney: "Start Your Journey",
-    bookFreeCall: "Book Your Free Discovery Call",
-    bookNow: "Book Now",
-    download: "Download",
-    email: "Email",
+  },
+  common: {
+    start: "Get Started",
+    contact: "Contact",
     whatsapp: "WhatsApp",
+    instagram: "Instagram",
+    linkedin: "LinkedIn",
+    language: "English",
   },
-
   hero: {
-    badge: "Mindshift for Lifeshift - Transform Your Life",
-    title: "Unlock Your Full Potential",
+    badge: "Coaching for clarity, confidence, and momentum",
+    title: "Build the mindset that builds your life.",
     subtitle:
-      "Transform your mindset, transform your life. Professional multilingual coaching for sustainable personal and career growth. Begin your journey from within.",
-    rightCardTitle: "Your transformation starts here",
-    clientSuccess: "Client Success",
-    rating: "4.9/5",
-    nextAvailable: "Next Available",
-    thisWeek: "This Week",
-    stats: {
-      clients: "Clients Coached",
-      years: "Years Experience",
-      success: "Success Rate",
-      clientsValue: "500+",
-      yearsValue: "10+",
-      successValue: "95%",
-    },
+      "Bilingual coaching (FA/EN) designed for real-world progress — clear direction, measurable habits, and sustainable growth.",
+    ctaPrimary: "Book a Session",
+    ctaSecondary: "View Pricing",
   },
-
   about: {
-    eyebrow: "About Your Coach",
-    title: "Meet Sara",
-    subtitle: "Your partner in transformation and personal growth",
-    storyTitle: "My Story",
-    story:
-      "I'm Sara, a mindset and life transformation coach, passionate about personal growth.\nMy own journey of transformation inspires me to guide others on theirs.\nI help you uncover your values, talents, and inner strengths. I believe that shifting your mind transforms your life.\nTogether, we'll begin from within, shift your mindset, and build a life aligned with your true desires.\nI am here to guide you in discovering and creating the best version of yourself.",
-    pillars: [
-      { title: "Passionate", desc: "About your personal growth and transformation" },
-      { title: "Focused", desc: "On uncovering your values and strengths" },
-      { title: "Certified", desc: "Life Coach" },
-      { title: "Supportive", desc: "Guiding you every step of the way" },
+  title: "About Sara Mahmodi",
+  text:
+    "I’m Sara Mahmodi, a bilingual (FA/EN) mindset & transformation coach. I work with ambitious professionals and expats who want clarity, confidence, and consistent progress. My approach is structured and practical: we identify what’s holding you back, design a simple action system, and build sustainable habits that create real results—without burnout.",
+  bullets: [
+    "Mindset & belief reframe (practical, not fluffy)",
+    "Habit systems for consistency and momentum",
+    "Decision-making clarity & confidence",
+    "Cross-cultural support for expats & multilingual professionals",
     ],
   },
-
-  whatIsCoaching: {
-    eyebrow: "What Is Coaching?",
-    title: "A partnership that empowers you to grow",
-    intro:
-      "Coaching is a transformative partnership that helps you clarify goals, unlock potential, and move forward with structure and accountability.",
-    differsTitle: "How Coaching Differs",
-    coaching: "Future-focused, action-oriented, unlocks your answers",
-    therapy: "Past-focused, healing-oriented, clinical approach",
-    consulting: "Expert-driven, solution-oriented, tells you what to do",
-    benefitsTitle: "Benefits You'll Experience",
-    benefits: [
-      {
-        title: "Goal Clarity",
-        desc: "Define and refine your personal and professional objectives with precision.",
-      },
-      {
-        title: "Insight & Awareness",
-        desc: "Discover new perspectives and unlock hidden potential within yourself.",
-      },
-      {
-        title: "Accountability",
-        desc: "Stay committed to your growth with structured, consistent support.",
-      },
-      {
-        title: "Empowerment",
-        desc: "Build unshakeable confidence and take full ownership of your journey.",
-      },
-    ],
-    ctaTitle: "Ready to start your transformation journey?",
-    ctaButton: "Book Your Free Discovery Call",
-  },
-
-  multilingual: {
-    eyebrow: "Multilingual Coaching Services",
-    title: "Coaching Without Language Barriers",
-    intro:
-      "As a multilingual coach, I understand the challenges of working across cultures and languages. Whether English is your first or second language, you'll feel comfortable and understood.",
-    languagesTitle: "Languages",
-    english: "English",
-    farsi: "Persian/Farsi",
-    whyTitle: "Why Choose Multilingual Coaching?",
-    reasons: [
-      "Coaching in your preferred language",
-      "Cultural sensitivity and understanding",
-      "Support for ESL professionals",
-      "Flexible session times (all time zones)",
-    ],
-    focusTitle: "Special Focus Areas",
-    focus: [
-      { title: "International Professionals", desc: "Navigate career growth in new countries" },
-      { title: "Expats & Immigrants", desc: "Adapt to new cultures while staying true to yourself" },
-      { title: "ESL Professionals", desc: "Build confidence in English-speaking environments" },
-      { title: "Cross-Cultural Leaders", desc: "Bridge cultural differences in global teams" },
-    ],
-    servingTitle: "Serving Clients From",
-    serving:
-      "Virtual sessions available worldwide • All time zones welcome",
-  },
-
-  howItWorks: {
-    eyebrow: "How It Works",
-    title: "A simple, proven process",
-    intro: "A clear framework designed to create lasting transformation.",
+  how: {
+    title: "How it Works",
     steps: [
-      { n: "01", title: "Free Consultation", desc: "We discuss goals, challenges, and fit." },
-      { n: "02", title: "Choose Your Package", desc: "Pick the commitment level that matches your goals." },
-      { n: "03", title: "Start Your Sessions", desc: "Begin regular 60-minute sessions with structure." },
-      { n: "04", title: "Track Your Progress", desc: "Measure wins, adjust strategy, and accelerate results." },
-    ],
-    sessionFlowTitle: "Typical Session Flow",
-    flow: [
-      { t: "Check-In", d: "Review progress & celebrate wins", m: "5 min" },
-      { t: "Explore", d: "Dive into current challenges", m: "15 min" },
-      { t: "Discover", d: "Uncover insights & breakthroughs", m: "20 min" },
-      { t: "Action Plan", d: "Create specific next steps", m: "15 min" },
-      { t: "Commit", d: "Set accountability for next session", m: "5 min" },
+      { title: "1) Choose your goal", text: "Pick one clear outcome for the next 30 days." },
+      { title: "2) Build a plan", text: "We convert your goal into weekly actions and habits." },
+      { title: "3) Track progress", text: "Simple tracking + feedback between sessions." },
+      { title: "4) Iterate", text: "We remove friction and reinforce what works." },
     ],
   },
-
+  multilingual: {
+    title: "Bilingual Experience",
+    text:
+      "Switch the website language any time. Sessions can be held in Persian or English depending on your preference.",
+  },
+  coaching: {
+    title: "What is Coaching?",
+    text:
+      "Coaching is a forward-looking partnership. We define goals, uncover blockers, and build repeatable systems — so you act consistently and get results.",
+    points: [
+      "Not therapy — it’s action + accountability",
+      "Structure, clarity, and measurable outcomes",
+      "Tools you can re-use for life",
+    ],
+  },
   sessions: {
-    eyebrow: "Sessions",
-    title: "What you get in each session",
-    intro:
-      "Structured yet flexible sessions, always tailored to your unique goals.",
-    cards: [
-      { title: "60-Minute Sessions", desc: "Enough time to go deep and make progress." },
-      { title: "Flexible Scheduling", desc: "Weekly or bi-weekly, aligned with your lifestyle." },
-      { title: "Multiple Formats", desc: "Video call, phone, or in-person (when possible)." },
-      { title: "Ongoing Support", desc: "Action items, resources, and support between sessions." },
+    title: "Sessions",
+    text:
+      "Choose a package or start with a single session. You’ll get a short summary after each session to keep you focused.",
+    items: [
+      { title: "Single Session", text: "60 minutes, clarity + next steps." },
+      { title: "Monthly Package", text: "4 sessions/month + support." },
+      { title: "3-Month Package", text: "Deep transformation + priority support." },
     ],
   },
-
   pricing: {
-    eyebrow: "Investment in Your Growth",
-    title: "Choose the package that fits your goals",
-    intro:
-      "All packages include the same high-quality coaching experience. Pick the level of support that matches your ambition.",
-    labels: {
-      mostPopular: "Most Popular",
-      bestValue: "Best Value",
-    },
-    plans: {
-      single: {
-        name: "Single Session",
-        price: "$150",
-        period: "per session",
-        bullets: [
-          "60-minute coaching session",
-          "Pre-session preparation form",
-          "Post-session summary",
-        ],
-        cta: "Get Started",
-      },
-      monthly: {
-        name: "Monthly Package",
-        price: "$500",
-        period: "per month",
-        bullets: [
-          "4 coaching sessions (60 min each)",
-          "Pre-session preparation forms",
-          "Email support between sessions",
-          "Progress tracking",
-          "15% savings vs single sessions",
-        ],
-        cta: "Get Started",
-      },
-      quarterly: {
-        name: "Quarterly Package",
+    title: "Pricing",
+    subtitle: "Choose the plan that fits your pace.",
+    cards: [
+      {
+        tag: "Best Value",
+        name: "3-Month Package",
         price: "$1,350",
-        period: "for 3 months",
+        note: "for 3 months",
         bullets: [
           "12 coaching sessions (60 min each)",
           "Initial goal-setting intensive",
           "Mid-point progress review",
           "Priority email support",
           "Custom resources & tools",
-          "25% savings vs single sessions",
+          "Savings vs single sessions: 25%",
         ],
-        cta: "Get Started",
       },
-    },
-    policiesTitle: "Flexible Policies",
-    paymentsTitle: "Payment Methods",
-    policy: [
-      "24-hour notice for rescheduling",
-      "Unused sessions refundable within 30 days",
-      "Sliding scale options available (limited spots)",
+      {
+        tag: "Most Popular",
+        name: "Monthly Package",
+        price: "$500",
+        note: "per month",
+        bullets: [
+          "4 coaching sessions (60 min each)",
+          "Pre-session preparation form",
+          "Email support between sessions",
+          "Progress tracking",
+          "Savings vs single sessions: 15%",
+        ],
+      },
+      {
+        tag: "",
+        name: "Single Session",
+        price: "$150",
+        note: "per session",
+        bullets: [
+          "60-minute coaching session",
+          "Pre-session preparation form",
+          "Post-session summary",
+        ],
+      },
     ],
-    payments: ["Credit card", "Bank transfer", "PayPal"],
   },
-
   agreement: {
-    eyebrow: "Agreement",
-    title: "Coaching Agreement & Policies",
-    intro:
-      "Clarity builds trust. Here is a transparent overview of key terms.",
-    bullets: [
-      "Confidentiality and privacy are respected at all times.",
-      "You can reschedule with 24-hour notice.",
-      "Coaching is future-focused and action-oriented.",
-      "You remain fully responsible for decisions and actions.",
-    ],
-    downloadBtn: "Download Agreement (PDF)",
+    title: "Agreement",
+    text:
+      "Download the coaching agreement (PDF). You can read it before booking.",
+    download: "Download Agreement PDF",
   },
-
-  testimonials: {
-    eyebrow: "Client Success Stories",
-    title: "What clients say",
-    intro:
-      "Real transformations from real people who invested in their growth.",
-    items: [
-      {
-        quote:
-          "Sara understood my cross-cultural challenges and helped me build confidence in English-speaking meetings. The bilingual approach made all the difference.",
-        name: "Fatima Al-Rashid",
-        role: "Marketing Manager, Dubai",
-        result: "Result: Promoted to Regional Director",
-      },
-      {
-        quote:
-          "Sara's coaching helped me launch my startup and communicate with international investors. Her structure and mindset work were crucial.",
-        name: "Ahmed Hassan",
-        role: "Tech Entrepreneur, Egypt",
-        result: "Result: Secured $500K funding",
-      },
-      {
-        quote:
-          "Moving abroad was challenging. Sara helped me adapt professionally while staying true to my values. I finally found balance.",
-        name: "Layla Mansour",
-        role: "Healthcare Professional, UK",
-        result: "Result: Work-life balance & promotion",
-      },
-    ],
-  },
-
   footer: {
-    brand:
-      "Transform your mindset, transform your life. Professional coaching for sustainable change.",
-    quickLinks: "Quick Links",
-    services: "Services",
-    contact: "Contact",
-    links: {
-      about: "About",
-      how: "How It Works",
-      pricing: "Pricing",
-      agreement: "Agreement",
-    },
-    servicesList: ["Life Coaching", "Career Coaching", "Executive Coaching", "Group Coaching"],
-    copyright: "© 2025 Mindshift for Lifeshift. All rights reserved.",
-    legal: ["Privacy Policy", "Terms of Service", "Cookie Policy"],
+    title: "MindShift for LifeShift",
+    text: "Coaching for clarity, confidence, and momentum.",
+    quick: "Quick Links",
+    connect: "Connect",
   },
 };
 

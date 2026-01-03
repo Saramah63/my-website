@@ -1,42 +1,84 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import en from "@/lib/i18n/en";
-import fa from "@/lib/i18n/fa";
+import React, { createContext, useContext, useMemo, useState, ReactNode, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
-type Lang = "en" | "fa";
-type Dict = typeof en;
+// اگر فایل‌هایت اینجاست (طبق اسکرین‌شات): lib/i18n/fa.ts و lib/i18n/en.ts
+import fa from "@/lib/i18n/fa";
+import en from "@/lib/i18n/en";
+
+export type Lang = "fa" | "en";
+
+type Dict = Record<string, any>;
 
 type Ctx = {
   lang: Lang;
+  dir: "rtl" | "ltr";
+  isFa: boolean;
   t: Dict;
   setLang: (l: Lang) => void;
+  switchLang: () => void;
 };
 
-const LanguageContext = createContext<Ctx | null>(null);
+const dictionaries: Record<Lang, Dict> = { fa, en };
+
+// default context (Fail-safe): باعث می‌شود اگر Provider هم نبود کرش نکند
+const LanguageContext = createContext<Ctx>({
+  lang: "en",
+  dir: "ltr",
+  isFa: false,
+  t: dictionaries.en,
+  setLang: () => {},
+  switchLang: () => {},
+});
+
+function detectLangFromPath(pathname: string | null): Lang {
+  if (!pathname) return "en";
+  return pathname.startsWith("/fa") ? "fa" : "en";
+}
 
 export function LanguageProvider({
   children,
   initialLang,
 }: {
-  children: React.ReactNode;
-  initialLang: Lang;
+  children: ReactNode;
+  initialLang?: Lang;
 }) {
-  const [lang, setLang] = useState<Lang>(initialLang);
+  const pathname = usePathname();
+  const router = useRouter();
 
+  const detected = detectLangFromPath(pathname);
+  const [lang, setLangState] = useState<Lang>(initialLang ?? detected);
+
+  // اگر کاربر از /fa به /en رفت، state هم sync شود
   useEffect(() => {
-    setLang(initialLang);
-  }, [initialLang]);
+    const next = initialLang ?? detected;
+    setLangState(next);
+  }, [initialLang, detected]);
 
-  const t = useMemo(() => (lang === "fa" ? (fa as Dict) : (en as Dict)), [lang]);
+  const setLang = (l: Lang) => {
+    setLangState(l);
+    router.push(l === "fa" ? "/fa" : "/en");
+  };
 
-  const value: Ctx = useMemo(() => ({ lang, t, setLang }), [lang, t]);
+  const switchLang = () => setLang(lang === "fa" ? "en" : "fa");
+
+  const value = useMemo<Ctx>(() => {
+    const isFa = lang === "fa";
+    return {
+      lang,
+      isFa,
+      dir: isFa ? "rtl" : "ltr",
+      t: dictionaries[lang] ?? dictionaries.en,
+      setLang,
+      switchLang,
+    };
+  }, [lang]);
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }
 
 export function useLanguage() {
-  const ctx = useContext(LanguageContext);
-  if (!ctx) throw new Error("useLanguage must be used inside LanguageProvider");
-  return ctx;
+  // دیگر throw نمی‌کند. حتی اگر Provider نباشد، default برمی‌گرداند.
+  return useContext(LanguageContext);
 }

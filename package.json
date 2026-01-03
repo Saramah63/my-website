@@ -13,7 +13,6 @@
     "framer-motion": "^12.23.26",
     "next": "16.1.1",
     "pdf-lib": "^1.17.1",
-    "playwright": "^1.57.0",
     "playwright-core": "^1.57.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"

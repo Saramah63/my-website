@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { chromium } from "playwright";
+import chromium from "@sparticuz/chromium";
+import { chromium as playwrightChromium } from "playwright-core";
 import fs from "fs";
 import path from "path";
 
@@ -217,9 +218,10 @@ export async function GET(req: Request) {
       bold: fontBoldBase64,
     };
 
-    const browser = await chromium.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--font-render-hinting=medium"],
-    });
+    const browser = await playwrightChromium.launch({
+  args: chromium.args,
+  executablePath: await chromium.executablePath(),
+});
 
     const page = await browser.newPage();
 

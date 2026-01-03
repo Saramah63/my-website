@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import chromium from "@sparticuz/chromium";
-import { chromium as playwrightChromium } from "playwright-core";
+import { chromium } from "playwright";
 import fs from "fs";
 import path from "path";
 
@@ -135,20 +134,23 @@ function agreementHtml(lang: Lang, fonts: { regular: string; bold?: string }) {
 
     <h1>Coaching Agreement</h1>
     <p class="intro">This document clarifies the framework for a coaching collaboration.</p>
-
-    <p class="muted">
-      Note: Replace this English body with your existing full English agreement content if you already have one.
-    </p>
+    <p class="muted">Replace this English text with your full English agreement content (if needed).</p>
   `;
+
+  const body = isFa
+    ? `<div class="faRoot" lang="fa" dir="rtl">${faBody}</div>`
+    : `<div class="enRoot" lang="en" dir="ltr">${enBody}</div>`;
 
   return `<!doctype html>
 <html lang="${lang}" dir="${isFa ? "rtl" : "ltr"}">
 <head>
   <meta charset="utf-8" />
   <style>
+    @page { size: A4; margin: 18mm; }
+
     @font-face {
       font-family: "Vazirmatn";
-      src: url(data:font/ttf;base64,${fonts.regular}) format("truetype");
+      src: url("data:font/ttf;base64,${fonts.regular}") format("truetype");
       font-weight: 400;
       font-style: normal;
     }
@@ -156,13 +158,13 @@ function agreementHtml(lang: Lang, fonts: { regular: string; bold?: string }) {
       fonts.bold
         ? `@font-face {
             font-family: "Vazirmatn";
-            src: url(data:font/ttf;base64,${fonts.bold}) format("truetype");
+            src: url("data:font/ttf;base64,${fonts.bold}") format("truetype");
             font-weight: 700;
             font-style: normal;
           }`
         : ""
     }
-    * { font-family: "Vazirmatn", Arial, sans-serif !important; }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -173,7 +175,17 @@ function agreementHtml(lang: Lang, fonts: { regular: string; bold?: string }) {
       direction: ${isFa ? "rtl" : "ltr"};
       unicode-bidi: plaintext;
       text-rendering: geometricPrecision;
+
+      /* Persian shaping consistency */
+      font-variant-ligatures: normal;
+      font-feature-settings: "liga" 1, "calt" 1, "kern" 1;
     }
+
+    /* Force font across all nodes (prevents accidental overrides) */
+    ${isFa ? `* { font-family: "Vazirmatn", Arial, sans-serif !important; }` : ""}
+
+    .faRoot { direction: rtl; unicode-bidi: plaintext; }
+    .enRoot { direction: ltr; }
 
     h1 { font-size: 20px; font-weight: 700; margin: 0 0 10px; }
     h2 { font-size: 14px; margin: 16px 0 6px; }
@@ -192,7 +204,7 @@ function agreementHtml(lang: Lang, fonts: { regular: string; bold?: string }) {
   </style>
 </head>
 <body>
-  ${isFa ? faBody : enBody}
+  ${body}
 </body>
 </html>`;
 }
@@ -207,7 +219,7 @@ export async function GET(req: Request) {
 
     const fontRegular = fs.readFileSync(regularPath);
 
-    let fontBoldBase64: string | undefined = undefined;
+    let fontBoldBase64: string | undefined;
     if (fs.existsSync(boldPath)) {
       const fontBold = fs.readFileSync(boldPath);
       fontBoldBase64 = fontBold.toString("base64");
@@ -218,23 +230,22 @@ export async function GET(req: Request) {
       bold: fontBoldBase64,
     };
 
-    const browser = await playwrightChromium.launch({
-  args: chromium.args,
-  executablePath: await chromium.executablePath(),
-});
+    const browser = await chromium.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox", "--font-render-hinting=medium"],
+    });
 
     const page = await browser.newPage();
 
     await page.setContent(agreementHtml(lang, fonts), { waitUntil: "networkidle" });
 
-    await page.evaluate(async () => {
-      // @ts-ignore
-      await document.fonts.ready;
-      // @ts-ignore
-      if (document.fonts.status !== "loaded") {
-        await new Promise((r) => setTimeout(r, 50));
-      }
-    });
+    // Hard gate: do not generate PDF until Vazirmatn is actually available
+    await page.waitForFunction(
+      () => {
+        // @ts-ignore
+        return document.fonts && document.fonts.check('12px "Vazirmatn"');
+      },
+      { timeout: 5000 }
+    );
 
     const pdfBuffer = await page.pdf({
       format: "A4",

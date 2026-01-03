@@ -225,8 +225,6 @@ export async function GET(req: Request) {
 
     await page.setContent(agreementHtml(lang, fonts), { waitUntil: "networkidle" });
 
-    await page.emulateMediaType("screen");
-
     await page.evaluate(async () => {
       // @ts-ignore
       await document.fonts.ready;

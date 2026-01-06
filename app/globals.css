@@ -598,3 +598,17 @@ p{
   background: rgba(34,211,182,0.10);
   border-color: rgba(34,211,182,0.22);
 }
+/* Pricing / Packages border only */
+.priceCard,
+.miniCard,
+.card.pricing,
+.card.packages {
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  padding: 18px;
+  backdrop-filter: blur(6px);
+}

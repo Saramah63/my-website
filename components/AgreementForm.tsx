@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type Lang = "fa" | "en";
 
@@ -14,14 +14,23 @@ function getTodayISO() {
 
 export default function AgreementForm({ lang }: { lang: Lang }) {
   const isFa = lang === "fa";
-
-  const pdfUrl = isFa
-    ? "/agreements/agreement-fa.pdf"
-    : "/agreements/agreement-en.pdf";
+  const pdfUrl = isFa ? "/agreements/agreement-fa.pdf" : "/agreements/agreement-en.pdf";
 
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  // Fixed packages (no API)
+  const packageOptions = useMemo(
+    () => [
+      { value: "single_session", fa: "جلسه تکی", en: "Single Session" },
+      { value: "monthly_package", fa: "پکیج ماهانه", en: "Monthly Package" },
+      { value: "three_month_package", fa: "پکیج سه ماهه", en: "3-Month Package" },
+    ],
+    []
+  );
+
+  const [sessionType, setSessionType] = useState<string>(packageOptions[0].value);
 
   // Signature pad
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -34,12 +43,13 @@ export default function AgreementForm({ lang }: { lang: Lang }) {
       name: isFa ? "نام و نام خانوادگی" : "Full name",
       email: "Email",
       phone: isFa ? "شماره تماس" : "Phone",
-      sessionType: isFa ? "نوع جلسه / پکیج" : "Session type / Package",
+      package: isFa ? "نوع جلسه / پکیج" : "Session type / Package",
       sessionDate: isFa ? "تاریخ شروع/جلسه" : "Session date/start",
       notes: isFa ? "توضیحات / هدف" : "Notes / Goals",
       consent: isFa ? "قرارداد را خوانده‌ام و تایید می‌کنم." : "I have read and accept the agreement.",
       sig: isFa ? "امضای دیجیتال (با ماوس یا لمس)" : "Digital signature (mouse/touch)",
       clear: isFa ? "پاک کردن امضا" : "Clear signature",
+      viewPdf: isFa ? "مشاهده PDF" : "View PDF",
       submit: isFa ? "ثبت و ذخیره قرارداد" : "Submit & Save Agreement",
       submitting: isFa ? "در حال ارسال..." : "Submitting...",
       ok: isFa ? "با موفقیت ذخیره شد." : "Saved successfully.",
@@ -127,7 +137,6 @@ export default function AgreementForm({ lang }: { lang: Lang }) {
     const c = canvasRef.current;
     if (!c) return null;
     if (!hasDrawn.current) return null;
-    // PNG base64
     return c.toDataURL("image/png");
   }
 
@@ -151,15 +160,15 @@ export default function AgreementForm({ lang }: { lang: Lang }) {
       submittedAt: new Date().toISOString(),
       page: window.location.pathname,
 
+      // fields
       name: String(fd.get("name") || ""),
       email: String(fd.get("email") || ""),
       phone: String(fd.get("phone") || ""),
-      sessionType: String(fd.get("sessionType") || ""),
+      sessionType, // fixed select
       sessionDate: String(fd.get("sessionDate") || ""),
       notes: String(fd.get("notes") || ""),
-      consent: true,
-
-      signaturePngBase64: sig, // 👈 مهم: امضا به صورت base64 ذخیره/ارسال می‌شود
+      consent: true, // this is the YES column
+      signaturePngBase64: sig,
     };
 
     setLoading(true);
@@ -170,12 +179,19 @@ export default function AgreementForm({ lang }: { lang: Lang }) {
         body: JSON.stringify(payload),
       });
 
-      const json = await res.json();
-      if (!json.ok) throw new Error(json.error || "Submission failed");
+      const text = await res.text();
+      let data: any = null;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = null;
+      }
+
+      if (!res.ok || data?.ok === false) {
+        throw new Error(data?.error || "Submission failed");
+      }
 
       setDone(true);
-
-      // بعد از ذخیره موفق، PDF را باز کن
       window.open(pdfUrl, "_blank", "noopener,noreferrer");
     } catch (e: any) {
       setErr(e?.message || "Error");
@@ -208,8 +224,19 @@ export default function AgreementForm({ lang }: { lang: Lang }) {
           </div>
 
           <div className="field">
-            <label className="label">{labels.sessionType}</label>
-            <input className="input" name="sessionType" required />
+            <label className="label">{labels.package}</label>
+            <select
+              className="input"
+              value={sessionType}
+              onChange={(e) => setSessionType(e.target.value)}
+              required
+            >
+              {packageOptions.map((p) => (
+                <option key={p.value} value={p.value}>
+                  {isFa ? p.fa : p.en}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -251,7 +278,7 @@ export default function AgreementForm({ lang }: { lang: Lang }) {
                 {labels.clear}
               </button>
               <a className="btn" href={pdfUrl} target="_blank" rel="noopener noreferrer">
-                {isFa ? "مشاهده PDF" : "View PDF"}
+                {labels.viewPdf}
               </a>
             </div>
           </div>

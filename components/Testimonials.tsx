@@ -42,10 +42,20 @@ export default function Testimonials() {
 و ممنونم ازت
 من روان‌شناس و کوچ والدگری هستم 🩵`,
         },
-      ]
-    : [
         {
-          name: "Zahra",
+          name: "من سارا هستم.",
+          rating: 5,
+          text: "در طی جلسات کوچی که با خانم سارا محمودی داشتم، از نحوه مدیریت جلسات و حمایت ایشان به عنوان کوچ واقعا راضی بودم. در طی جلسات، تمام تلاش ایشان بر این بود که به من کمک کنند که با آگاهی هایی که در طی جلسات به دست می آورم، به سمت نتیجه دلخواه و مدنظرم پیش بروم و من از ایشان کمال تشکر را دارم."
+        },
+        {
+          name: "سارا جان محمودی عزیز",
+          rating: 5,
+          text: "کوچ عزیز من در مسیر fca\nهمراهی با شما در مسیر کوچینگ برای من بسیار ارزشمند بود و کنارتون به اگاهی های جالب و مهمی رسیدم 🌿ارزوی موفقیت های فراوون سارا جون 🌹"
+        }
+         ]
+       : [
+        {
+          name: "Zohra",
           title: "Coach",
           text: `Sara has an exceptionally high level of acceptance. I think she quickly processes even seemingly unusual situations and welcomes the client in a safe space.
 She has strong empathy and always tries to keep herself up to date.
@@ -67,7 +77,17 @@ After a few sessions, I reached an order that is real, practical, and sustainabl
 Thank you.
 I am a psychologist and a parenting coach 🩵`,
         },
-      ];
+        {
+        name: "Sarah",
+        rating: 5,
+        text: "During the coaching sessions I had with Ms. Sara Mahmoudi, I was truly satisfied with the way the sessions were managed and with her support as a coach. Throughout the sessions, her main effort was to help me move toward my desired and intended outcome by using the awareness I gained during the sessions, and I sincerely thank her for that."
+      },
+      {
+        name: "Ladan",
+        rating: 5,
+        text: "My dear coach on the FCA path,\nAccompanying you on the coaching journey was very valuable to me, and by your side I reached interesting and important insights 🌿\nI wish you great success, dear Sara 🌹"
+      }
+    ];
 
   return (
     <section id="testimonials" className="section" dir={isFa ? "rtl" : "ltr"}>

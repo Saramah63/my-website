@@ -8,9 +8,7 @@ export default function Agreement() {
   const isFa = pathname === "/fa" || pathname.startsWith("/fa/");
   const dir = isFa ? "rtl" : "ltr";
 
-  const pdfHref = isFa
-    ? "/agreements/agreement-fa.pdf"
-    : "/agreements/agreement-en.pdf";
+  const pdfHref = isFa ? "/agreements/agreement-fa.pdf" : "/agreements/agreement-en.pdf";
 
   return (
     <section className="section" id="agreement" dir={dir}>
@@ -20,7 +18,7 @@ export default function Agreement() {
           <h2 className="h2">{isFa ? "قرارداد کوچینگ" : "Coaching Agreement"}</h2>
           <p className="muted">
             {isFa
-              ? "می‌تونی فایل قرارداد را دانلود/باز کنی و همین‌جا آنلاین هم اطلاعات را ثبت و امضا کنی."
+              ? "می‌تونی فایل قرارداد را باز/دانلود کنی و همین‌جا آنلاین هم اطلاعات را ثبت و امضا کنی."
               : "You can open/download the agreement PDF and also submit/sign online below."}
           </p>
         </div>
@@ -37,7 +35,6 @@ export default function Agreement() {
 
         <div style={{ height: 18 }} />
 
-        {/* فرم آنلاین */}
         <AgreementForm lang={isFa ? "fa" : "en"} />
       </div>
     </section>

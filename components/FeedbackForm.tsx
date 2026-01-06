@@ -7,8 +7,14 @@ type Status = "idle" | "loading" | "ok" | "err";
 
 function Star({ filled }: { filled: boolean }) {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"
-      style={{ opacity: filled ? 1 : 0.35 }}>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+      style={{ opacity: filled ? 1 : 0.35 }}
+    >
       <path
         fill="currentColor"
         d="M12 17.27l5.18 3.18-1.64-5.81L20 10.9l-5.9-.45L12 5l-2.1 5.45-5.9.45 4.46 3.74-1.64 5.81z"
@@ -20,7 +26,7 @@ function Star({ filled }: { filled: boolean }) {
 function StarsInput({
   value,
   onChange,
-  dir
+  dir,
 }: {
   value: number;
   onChange: (v: number) => void;
@@ -48,7 +54,16 @@ function StarsInput({
   );
 }
 
-export default function Feedback() {
+async function safeJson(res: Response) {
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { ok: false, error: `Non-JSON response: ${text.slice(0, 200)}` };
+  }
+}
+
+export default function FeedbackForm() {
   const { lang } = useLanguage();
   const isFa = lang === "fa";
   const dir = isFa ? "rtl" : "ltr";
@@ -71,8 +86,7 @@ export default function Feedback() {
       sending: isFa ? "در حال ارسال..." : "Sending...",
       ok: isFa ? "ثبت شد. ممنونم از فیدبک شما." : "Submitted. Thank you for your feedback.",
       err: isFa ? "ارسال ناموفق بود. دوباره تلاش کن." : "Submission failed. Please try again.",
-      required: isFa ? "این فیلد ضروری است." : "This field is required.",
-      examplesTitle: isFa ? "نمونه نظرات" : "Featured reviews"
+      examplesTitle: isFa ? "نمونه نظرات" : "Featured reviews",
     };
   }, [isFa]);
 
@@ -81,24 +95,28 @@ export default function Feedback() {
     setStatus("loading");
 
     const fd = new FormData(e.currentTarget);
+
     const payload = {
       type: "feedback",
       lang,
       source: "website",
-      name: String(fd.get("name") || ""),
+      fullName: String(fd.get("name") || ""),
       email: String(fd.get("email") || ""),
       rating,
       message: String(fd.get("message") || ""),
     };
 
     try {
-      const res = await fetch("/api/submit", {
+      // مهم: مستقیم به /api/feedback می‌زنیم (نه /api/submit)
+      const res = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      if (data.ok) {
+
+      const data = await safeJson(res);
+
+      if (res.ok && data?.ok === true) {
         setStatus("ok");
         (e.currentTarget as HTMLFormElement).reset();
         setRating(5);
@@ -110,31 +128,30 @@ export default function Feedback() {
     }
   }
 
-  // دو فیدبک نمونه (تو می‌تونی متن واقعی رو جایگزین کنی)
   const featured = isFa
     ? [
         {
           name: "مراجع ۱",
           rating: 5,
-          text: "جلسات خیلی شفاف و کاربردی بود. کمکم کرد تصمیم‌هام رو سریع‌تر و با اعتمادبه‌نفس بگیرم."
+          text: "جلسات خیلی شفاف و کاربردی بود. کمکم کرد تصمیم‌هام رو سریع‌تر و با اعتمادبه‌نفس بگیرم.",
         },
         {
           name: "مراجع ۲",
           rating: 5,
-          text: "در مدت کوتاه، هم ذهنیتم بهتر شد هم قدم‌های واقعی برداشتم. ساختار جلسات عالی بود."
-        }
+          text: "در مدت کوتاه، هم ذهنیتم بهتر شد هم قدم‌های واقعی برداشتم. ساختار جلسات عالی بود.",
+        },
       ]
     : [
         {
           name: "Client 1",
           rating: 5,
-          text: "Clear, practical sessions. I gained confidence and made decisions faster."
+          text: "Clear, practical sessions. I gained confidence and made decisions faster.",
         },
         {
           name: "Client 2",
           rating: 5,
-          text: "In a short time, I shifted my mindset and took real steps forward. Great structure."
-        }
+          text: "In a short time, I shifted my mindset and took real steps forward. Great structure.",
+        },
       ];
 
   return (
@@ -198,7 +215,7 @@ export default function Feedback() {
                       ))}
                     </div>
                   </div>
-                  <div className="muted">{r.text}</div>
+                  <div className="muted" style={{ whiteSpace: "pre-line" }}>{r.text}</div>
                 </div>
               ))}
             </div>

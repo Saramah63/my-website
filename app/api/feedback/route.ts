@@ -8,9 +8,9 @@ const FEEDBACK_WEBHOOK =
 async function readJsonOrText(res: Response) {
   const text = await res.text();
   try {
-    return { isJson: true, json: JSON.parse(text), text };
+    return { isJson: true as const, json: JSON.parse(text), text };
   } catch {
-    return { isJson: false, json: null as any, text };
+    return { isJson: false as const, json: null, text };
   }
 }
 
@@ -18,15 +18,27 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // سخت‌گیرانه: payload نهایی را استاندارد می‌کنیم
+    const ratingNum = Number(body?.rating ?? 0);
+    const rating = Number.isFinite(ratingNum) ? ratingNum : 0;
+
+    // بهتر: ip و userAgent را از هدرها بگیر (قابل اعتمادتر از کلاینت)
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "";
+    const userAgent = req.headers.get("user-agent") || "";
+
     const payload = {
       type: "feedback",
-      lang: body.lang || "en",
-      source: body.source || "website",
-      fullName: body.fullName || body.name || "",
-      email: body.email || "",
-      rating: Number(body.rating || 0),
-      message: body.message || "",
+      lang: String(body?.lang || "en"),
+      source: String(body?.source || "website"),
+      fullName: String(body?.fullName || body?.name || ""),
+      email: String(body?.email || ""),
+      rating,
+      message: String(body?.message || ""),
+      allowPublish: Boolean(body?.allowPublish ?? false),
+      ip,
+      userAgent,
     };
 
     const upstream = await fetch(FEEDBACK_WEBHOOK, {
@@ -41,19 +53,30 @@ export async function POST(req: Request) {
 
     if (!upstream.ok) {
       return NextResponse.json(
-        { ok: false, error: `Upstream HTTP ${upstream.status}. ${String(parsed.text || "").slice(0, 200)}` },
+        {
+          ok: false,
+          error: `Upstream HTTP ${upstream.status}. ${String(parsed.text || "").slice(0, 200)}`,
+        },
         { status: 500 }
       );
     }
 
-    // اگر JSON و ok:false بود -> fail
     if (parsed.isJson && parsed.json?.ok === false) {
-      return NextResponse.json({ ok: false, error: parsed.json?.error || "Upstream ok:false" }, { status: 500 });
+      return NextResponse.json(
+        { ok: false, error: parsed.json?.error || "Upstream ok:false" },
+        { status: 500 }
+      );
     }
+    
 
-    // در غیر این صورت success
-    return NextResponse.json({ ok: true });
+    return NextResponse.json(
+      { ok: true },
+      { status: 200, headers: { "Cache-Control": "no-store" } }
+    );
   } catch (err: any) {
-    return NextResponse.json({ ok: false, error: err?.message || "Feedback API error" }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: err?.message || "Feedback API error" },
+      { status: 500 }
+    );
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "../lib/LanguageContext";
 
 type Status = "idle" | "loading" | "ok" | "err";
@@ -32,7 +32,7 @@ function StarsInput({
   onChange: (v: number) => void;
   dir: "ltr" | "rtl";
 }) {
-  const [hover, setHover] = useState<number>(0);
+  const [hover, setHover] = useState(0);
   const effective = hover || value;
 
   return (
@@ -54,12 +54,12 @@ function StarsInput({
   );
 }
 
-async function safeJson(res: Response) {
+async function safeJson(res: Response): Promise<any | null> {
   const text = await res.text();
   try {
     return JSON.parse(text);
   } catch {
-    return { ok: false, error: `Non-JSON response: ${text.slice(0, 200)}` };
+    return null;
   }
 }
 
@@ -70,89 +70,177 @@ export default function FeedbackForm() {
 
   const [rating, setRating] = useState(5);
   const [status, setStatus] = useState<Status>("idle");
+  const [allowPublish, setAllowPublish] = useState(true);
 
-  const copy = useMemo(() => {
-    return {
+  const [featuredFromSheet, setFeaturedFromSheet] = useState<
+    { name: string; rating: number; text: string }[]
+  >([]);
+
+  const copy = useMemo(
+    () => ({
       title: isFa ? "فیدبک و نظرات مراجعان" : "Client Feedback",
       subtitle: isFa
-        ? "اگر با من جلسه داشته‌ای، خوشحال می‌شوم تجربه‌ات را ثبت کنی. فیدبک‌ها به‌صورت خودکار ذخیره می‌شوند."
-        : "If you’ve worked with me, I’d love your feedback. Submissions are saved automatically.",
+        ? "اگر با من جلسه داشته‌ای، خوشحال می‌شوم تجربه‌ات را ثبت کنی."
+        : "If you’ve worked with me, I’d love your feedback.",
       formTitle: isFa ? "ثبت فیدبک" : "Leave feedback",
       name: isFa ? "نام" : "Name",
       email: isFa ? "ایمیل (اختیاری)" : "Email (optional)",
       message: isFa ? "پیام شما" : "Your message",
       rating: isFa ? "امتیاز" : "Rating",
+      publish: isFa ? "اجازه نمایش این نظر در سایت" : "Allow this review to be featured",
       submit: isFa ? "ارسال فیدبک" : "Submit feedback",
       sending: isFa ? "در حال ارسال..." : "Sending...",
-      ok: isFa ? "ثبت شد. ممنونم از فیدبک شما." : "Submitted. Thank you for your feedback.",
-      err: isFa ? "ارسال ناموفق بود. دوباره تلاش کن." : "Submission failed. Please try again.",
+      ok: isFa ? "ممنون از فیدبک شما 🌱" : "Thank you for your feedback 🌱",
+      err: isFa
+        ? "ارسال ناموفق بود. لطفاً دوباره تلاش کن."
+        : "Submission failed. Please try again.",
       examplesTitle: isFa ? "نمونه نظرات" : "Featured reviews",
-    };
-  }, [isFa]);
+      footer: isFa
+        ? "در صورت رضایت، می‌توانم فیدبک شما را بدون اطلاعات حساس در سایت نمایش بدهم."
+        : "If you want, I can feature selected feedback on the website (no sensitive info).",
+    }),
+    [isFa]
+  );
+
+  const featuredFallback = useMemo(
+  () => [
+    {
+      name: isFa ? "مراجع" : "Client",
+      rating: 5,
+      text: isFa
+        ? "جلسات بسیار شفاف و کاربردی بودند."
+        : "Clear and practical sessions.",
+    },
+    {
+      name: isFa ? "مراجع" : "Client",
+      rating: 5,
+      text: isFa
+        ? "کمک کرد سریع‌تر تصمیم بگیرم."
+        : "Helped me make decisions faster.",
+    },
+    {
+      name: isFa ? "مراجع" : "Client",
+      rating: 5,
+      text: isFa
+        ? "ساختار عالی و قابل اجرا."
+        : "Great structure and clarity.",
+    },
+  ],
+  [isFa]
+);
+
+    const featuredSorted = useMemo(() => {
+  const arr = (featuredFromSheet.length > 0 ? featuredFromSheet : featuredFallback).slice();
+
+  // اگر بعداً timestamp داشتی: (x as any).createdAt
+  arr.sort((a: any, b: any) => {
+    const ra = Number(a.rating || 0);
+    const rb = Number(b.rating || 0);
+    if (rb !== ra) return rb - ra;
+
+    // اختیاری: اگر createdAt داشتی
+    const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return tb - ta;
+  });
+
+  return arr.slice(0, 6); // حداکثر آیتمی که اسلایدر می‌چرخونه
+}, [featuredFromSheet, featuredFallback]);
+
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("loading");
+  e.preventDefault();
+  setStatus("loading");
 
-    const fd = new FormData(e.currentTarget);
+  const form = e.currentTarget; // ✅ قبل از await ذخیره کن
+  const fd = new FormData(form);
 
-    const payload = {
-      type: "feedback",
-      lang,
-      source: "website",
-      fullName: String(fd.get("name") || ""),
-      email: String(fd.get("email") || ""),
-      rating,
-      message: String(fd.get("message") || ""),
-    };
+  const payload = {
+    type: "feedback",
+    lang,
+    source: "website",
+    fullName: String(fd.get("name") || ""),
+    email: String(fd.get("email") || ""),
+    rating,
+    message: String(fd.get("message") || ""),
+    allowPublish,
+  };
 
-    try {
-      // مهم: مستقیم به /api/feedback می‌زنیم (نه /api/submit)
-      const res = await fetch("/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+  try {
+    const res = await fetch("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-      const data = await safeJson(res);
+    const data = await safeJson(res);
 
-      if (res.ok && data?.ok === true) {
-        setStatus("ok");
-        (e.currentTarget as HTMLFormElement).reset();
-        setRating(5);
-      } else {
-        setStatus("err");
+    console.log("FEEDBACK RES", { status: res.status, ok: res.ok, data });
+
+    const success = res.ok && !(data && data.ok === false);
+
+    if (success) {
+      setStatus("ok");
+      form.reset(); // ✅ به جای e.currentTarget.reset()
+      setRating(5);
+
+      // refresh featured
+      try {
+        const r = await fetch(`/api/testimonials?lang=${lang}&limit=6`, {
+          cache: "no-store",
+        });
+        const j = await r.json().catch(() => null);
+        if (r.ok && j?.ok && Array.isArray(j.items)) {
+          setFeaturedFromSheet(
+            j.items.map((x: any) => ({
+              name: String(x.fullName || (isFa ? "مراجع" : "Client")),
+              rating: Number(x.rating || 5),
+              text: String(x.message || ""),
+            }))
+          );
+        }
+      } catch {
+        // ignore
       }
-    } catch {
+    } else {
       setStatus("err");
     }
+  } catch (err) {
+    console.error("Submit error", err);
+    setStatus("err");
   }
+}
 
-  const featured = isFa
-    ? [
-        {
-          name: "مراجع ۱",
-          rating: 5,
-          text: "جلسات خیلی شفاف و کاربردی بود. کمکم کرد تصمیم‌هام رو سریع‌تر و با اعتمادبه‌نفس بگیرم.",
-        },
-        {
-          name: "مراجع ۲",
-          rating: 5,
-          text: "در مدت کوتاه، هم ذهنیتم بهتر شد هم قدم‌های واقعی برداشتم. ساختار جلسات عالی بود.",
-        },
-      ]
-    : [
-        {
-          name: "Client 1",
-          rating: 5,
-          text: "Clear, practical sessions. I gained confidence and made decisions faster.",
-        },
-        {
-          name: "Client 2",
-          rating: 5,
-          text: "In a short time, I shifted my mindset and took real steps forward. Great structure.",
-        },
-      ];
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadTestimonials() {
+      try {
+        const res = await fetch(`/api/testimonials?lang=${lang}&limit=6`, {
+          cache: "no-store",
+        });
+        const data = await res.json().catch(() => null);
+
+        if (!cancelled && res.ok && data?.ok && Array.isArray(data.items)) {
+          setFeaturedFromSheet(
+            data.items.map((x: any) => ({
+              name: String(x.fullName || (isFa ? "مراجع" : "Client")),
+              rating: Number(x.rating || 5),
+              text: String(x.message || ""),
+            }))
+          );
+        }
+      } catch {
+        // silent fallback
+      }
+    }
+
+    loadTestimonials();
+    return () => {
+      cancelled = true;
+    };
+  }, [lang, isFa]);
 
   return (
     <section id="feedback" className="section" dir={dir}>
@@ -187,14 +275,42 @@ export default function FeedbackForm() {
 
               <div className="field">
                 <label className="label">{copy.message}</label>
-                <textarea className="textarea" name="message" rows={4} required />
+                <textarea
+                  className="textarea"
+                  name="message"
+                  rows={4}
+                  required
+                />
               </div>
 
-              <button className="btn btnPrimary" type="submit" disabled={status === "loading"}>
+              <div
+                className="field"
+                style={{ display: "flex", gap: 10, alignItems: "center" }}
+              >
+                <input
+                  id="allowPublish"
+                  type="checkbox"
+                  checked={allowPublish}
+                  onChange={(e) => setAllowPublish(e.target.checked)}
+                />
+                <label
+                  htmlFor="allowPublish"
+                  className="muted"
+                  style={{ fontSize: 13 }}
+                >
+                  {copy.publish}
+                </label>
+              </div>
+
+              <button
+                className="btn btnPrimary"
+                type="submit"
+                disabled={status === "loading"}
+              >
                 {status === "loading" ? copy.sending : copy.submit}
               </button>
 
-              {status === "ok" && <p className="note ok">{copy.ok}</p>}
+              {status === "ok" && <p className="note success">{copy.ok}</p>}
               {status === "err" && <p className="note err">{copy.err}</p>}
             </form>
           </div>
@@ -202,30 +318,31 @@ export default function FeedbackForm() {
           <div className="card">
             <h3 className="h3">{copy.examplesTitle}</h3>
 
-            <div className="reviews">
-              {featured.map((r) => (
-                <div className="reviewCard" key={r.name}>
-                  <div className="reviewTop">
-                    <div className="reviewName">{r.name}</div>
-                    <div className="reviewStars" aria-label={`${r.rating} stars`}>
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <span key={n} className="starStatic">
-                          <Star filled={r.rating >= n} />
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="muted" style={{ whiteSpace: "pre-line" }}>{r.text}</div>
-                </div>
-              ))}
-            </div>
+            <div className="reviewsSlider" dir={dir}>
+  {featuredSorted.slice(0, 3).map((r, i) => (   // اگر 2-3 تا میخوای: 3
+    <div className="reviewSlide" key={`${r.name}-${i}`}>
+      <div className="reviewTop">
+        <div className="reviewName">{r.name}</div>
+        <div className="reviewStars" aria-label={`${r.rating} stars`}>
+          {[1, 2, 3, 4, 5].map((n) => (
+            <span key={n} className="starStatic">
+              <Star filled={Number(r.rating) >= n} />
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="muted">
+        {r.text.length > 90 ? r.text.slice(0, 90) + "…" : r.text}
+      </div>
+    </div>
+  ))}
+</div>
 
             <div className="divider" />
 
             <p className="muted" style={{ fontSize: 13 }}>
-              {isFa
-                ? "اگر دوست داشتی، می‌تونم بهترین فیدبک‌ها را (بدون اطلاعات حساس) در سایت نمایش بدهم."
-                : "If you want, I can feature selected feedback on the website (no sensitive info)."}
+              {copy.footer}
             </p>
           </div>
         </div>

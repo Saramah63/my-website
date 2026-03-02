@@ -45,8 +45,7 @@ rel="noreferrer"
             </a>
 
             <p className="mt-4 text-xs text-slate-500">
-              Prefer email? Contact me at{" "}
-              <span className="font-medium">saramah63@gmail.com</span>
+              Prefer email? Contact at contact [at] saramahmodi.com
             </p>
           </div>
         </div>

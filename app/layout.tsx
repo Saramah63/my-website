@@ -4,8 +4,15 @@ import type { Metadata } from "next";
 import LangHtmlSync from "../components/LangHtmlSync";
 
 export const metadata: Metadata = {
-  title: "MindShift for LifeShift",
-  description: "Professional Coaching | Online Worldwide",
+  title: "Sara Mahmodi | Strategic Reinvention Architect",
+  description:
+    "Structured, outcome-driven coaching for Persian-speaking immigrants and future migrants seeking clarity, direction, and measurable progress.",
+  openGraph: {
+    title: "Sara Mahmodi | Strategic Reinvention Architect",
+    description:
+      "Structured, outcome-driven coaching for Persian-speaking immigrants and future migrants seeking clarity, direction, and measurable progress.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

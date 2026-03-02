@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
+import { WHATSAPP_NUMBER } from "@/lib/siteConfig";
 
 export default function StickyCTA() {
   const { lang } = useLanguage();
@@ -22,10 +23,10 @@ export default function StickyCTA() {
   const secondary = lang === "fa" ? "دیدن قیمت‌ها" : "View Pricing";
 
   const wa = () => {
-    const url = `https://wa.me/358417539326?text=${encodeURIComponent(
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
       lang === "fa"
-        ? "سلام سارا، برای رزرو کوچینگ پیام می‌دم."
-        : "Hi Sara, I’d like to book a coaching session."
+        ? "سلام، برای دریافت اطلاعات درباره برنامه بازآفرینی استراتژیک پیام می‌دهم."
+        : "Hello, I am interested in learning more about your Strategic Reinvention program."
     )}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };

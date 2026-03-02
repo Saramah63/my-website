@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function ContactRedirect() {
+export default function ApplyRedirect() {
   redirect("/en/apply");
 }

@@ -1,8 +1,7 @@
 "use client";
 
-const INSTAGRAM = "https://www.instagram.com/mindshift_for_lifeshift/";
-const LINKEDIN = "https://www.linkedin.com/in/saramahmodi/";
-const WHATSAPP = "https://wa.me/358417539326";
+import { usePathname } from "next/navigation";
+import { INSTAGRAM_URL, LINKEDIN_URL, WHATSAPP_NUMBER } from "@/lib/siteConfig";
 
 function IconButton({
   href,
@@ -17,32 +16,10 @@ function IconButton({
     <a
       href={href}
       target="_blank"
-      rel="noreferrer"
+      rel="noopener noreferrer"
       aria-label={label}
       title={label}
-      style={{
-        width: 42,
-        height: 42,
-        borderRadius: 14,
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        border: "1px solid var(--border)",
-        background: "white",
-        color: "var(--text-main)", // مهم: رنگ آیکن
-        boxShadow: "0 6px 16px rgba(15,23,42,.06)",
-        transition: "transform .2s ease, box-shadow .2s ease, background .2s ease",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-2px)";
-        e.currentTarget.style.boxShadow = "0 10px 22px rgba(37,99,235,.16)";
-        e.currentTarget.style.background = "rgba(99,102,241,.06)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0px)";
-        e.currentTarget.style.boxShadow = "0 6px 16px rgba(15,23,42,.06)";
-        e.currentTarget.style.background = "white";
-      }}
+      className="socialBtn"
     >
       {children}
     </a>
@@ -50,30 +27,16 @@ function IconButton({
 }
 
 export default function SocialIcons() {
-  return (
-    <div style={{ display: "inline-flex", gap: 10, alignItems: "center" }}>
-      <IconButton href={INSTAGRAM} label="Instagram">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Z"
-            stroke="currentColor"
-            strokeWidth="1.9"
-          />
-          <path
-            d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"
-            stroke="currentColor"
-            strokeWidth="1.9"
-          />
-          <path
-            d="M17.5 6.5h.01"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-        </svg>
-      </IconButton>
+  const pathname = usePathname() || "";
+  const isFa = pathname.startsWith("/fa");
+  const message = isFa
+    ? "سلام، برای دریافت اطلاعات درباره برنامه بازآفرینی استراتژیک پیام می‌دهم."
+    : "Hello, I am interested in learning more about your Strategic Reinvention program.";
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
-      <IconButton href={LINKEDIN} label="LinkedIn">
+  return (
+    <div className="socialRow">
+      <IconButton href={LINKEDIN_URL} label="LinkedIn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <path
             d="M4 4h4v16H4V4Z"
@@ -93,7 +56,27 @@ export default function SocialIcons() {
         </svg>
       </IconButton>
 
-      <IconButton href={WHATSAPP} label="WhatsApp">
+      <IconButton href={INSTAGRAM_URL} label="Instagram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Z"
+            stroke="currentColor"
+            strokeWidth="1.9"
+          />
+          <path
+            d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"
+            stroke="currentColor"
+            strokeWidth="1.9"
+          />
+          <path
+            d="M17.5 6.5h.01"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+        </svg>
+      </IconButton>
+      <IconButton href={whatsappUrl} label="WhatsApp">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <path
             d="M20 11.5A8.5 8.5 0 0 1 7.2 19L4 20l1-3.1A8.5 8.5 0 1 1 20 11.5Z"

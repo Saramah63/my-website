@@ -35,3 +35,45 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 # my-website
+
+## Email Forwarding + Contact Form
+
+### Forwarding (DNS / Email Routing)
+Goal: `contact@saramahmodi.com` must deliver to `saramah63@gmail.com`.
+
+If your domain is on:
+- GoDaddy / Namecheap: enable Email Forwarding → forward `contact@saramahmodi.com` → `saramah63@gmail.com`
+
+If you do not have forwarding:
+- Cloudflare Email Routing (free)
+- ImprovMX (free)
+
+Do not assume Google Workspace.
+
+### SMTP Notifications (Apply Form)
+The Apply form stores submissions and sends a notification email to `saramah63@gmail.com` using Gmail SMTP + Nodemailer.
+
+Required env vars:
+```
+EMAIL_USER=saramah63@gmail.com
+EMAIL_PASS=app_password_here
+NOTIFICATION_EMAIL=saramah63@gmail.com
+NEXT_PUBLIC_STRATEGIC_SESSION_PRICE=
+NEXT_PUBLIC_SESSION_DURATION=
+NEXT_PUBLIC_APPLICATION_REVIEW_DAYS=
+NEXT_PUBLIC_SCHEDULING_URL=
+NEXT_PUBLIC_CONTACT_EMAIL=contact@saramahmodi.com
+NEXT_PUBLIC_LINKEDIN_URL=
+NEXT_PUBLIC_INSTAGRAM_URL=
+NEXT_PUBLIC_WHATSAPP_NUMBER=358417539326
+```
+
+Gmail App Password:
+1. Enable 2‑Step Verification on the Gmail account.
+2. Create an App Password for “Mail”.
+3. Use that app password as `EMAIL_PASS` (never your real password).
+
+### Rate Limiting + Honeypot
+The API route includes:
+- Honeypot hidden field
+- Simple in‑memory rate limiting (5 requests per 10 minutes per IP)

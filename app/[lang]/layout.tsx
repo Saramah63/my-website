@@ -16,12 +16,12 @@ export async function generateMetadata({
   const isFa = lang === "fa";
 
   const title = isFa
-    ? "سارا محمودی | کوچینگ رشد فردی و شفافیت (آنلاین)"
-    : "Sara Mahmodi | Professional Coaching (Online)";
+    ? "سارا محمودی | معمار بازآفرینی راهبردی"
+    : "Sara Mahmodi | Strategic Reinvention Architect";
 
   const description = isFa
-    ? "کوچینگ نتیجه‌محور برای شفاف‌سازی هدف‌ها، ساخت عادت‌های پایدار و رشد شخصی. رزرو جلسه معرفی ۳۰ دقیقه‌ای در کالندلی."
-    : "Outcome-driven coaching to clarify goals, build sustainable habits, and accelerate personal growth. Book a 30-min intro via Calendly.";
+    ? "کوچینگ ساختارمند برای مهاجران فارسی‌زبان و افرادی که برای مهاجرت آماده می‌شوند؛ با تمرکز بر وضوح، جهت‌گیری و پیشرفت قابل سنجش."
+    : "Structured coaching for Persian-speaking immigrants and individuals preparing for migration — built on clarity, direction, and measurable progress.";
 
   const url = `/${lang}`;
 

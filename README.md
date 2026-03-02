@@ -38,26 +38,35 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Email Forwarding + Contact Form
 
-### Forwarding (DNS / Email Routing)
+### A) Forwarding (Domain Email Routing)
 Goal: `contact@saramahmodi.com` must deliver to `saramah63@gmail.com`.
 
-If your domain is on:
-- GoDaddy / Namecheap: enable Email Forwarding → forward `contact@saramahmodi.com` → `saramah63@gmail.com`
+Recommended: **Cloudflare Email Routing**
+1. Add your domain to Cloudflare (Free plan).
+2. Update GoDaddy nameservers to the Cloudflare nameservers.
+3. In Cloudflare Dashboard: Email → Email Routing → Enable.
+4. Verify destination address: `saramah63@gmail.com`.
+5. Create routing rule: `contact` → `saramah63@gmail.com`.
 
-If you do not have forwarding:
-- Cloudflare Email Routing (free)
-- ImprovMX (free)
+GoDaddy Forwarding (if available):
+- Use GoDaddy Email Forwarding (domain email routing) to forward `contact@saramahmodi.com` → `saramah63@gmail.com`.
+- Note: GoDaddy “Email Privacy” is not domain email routing. You need actual forwarding for the domain inbox.
 
-Do not assume Google Workspace.
+Testing:
+- Send a test email to `contact@saramahmodi.com`.
+- Check Gmail inbox and spam folder.
+- If it lands in spam, mark “Not spam” once to improve deliverability.
 
-### SMTP Notifications (Apply Form)
-The Apply form stores submissions and sends a notification email to `saramah63@gmail.com` using Gmail SMTP + Nodemailer.
+### B) SMTP Notifications (Apply Form)
+The Apply form stores submissions in `/data/submissions.json` (dev) and sends a notification email to `saramah63@gmail.com` using Gmail SMTP + Nodemailer.
 
 Required env vars:
 ```
 EMAIL_USER=saramah63@gmail.com
-EMAIL_PASS=app_password_here
+EMAIL_PASS=GMAIL_APP_PASSWORD
 NOTIFICATION_EMAIL=saramah63@gmail.com
+SITE_NAME=SaraMahmodi.com
+APP_ENV=production
 NEXT_PUBLIC_STRATEGIC_SESSION_PRICE=
 NEXT_PUBLIC_SESSION_DURATION=
 NEXT_PUBLIC_APPLICATION_REVIEW_DAYS=
@@ -70,10 +79,11 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=358417539326
 
 Gmail App Password:
 1. Enable 2‑Step Verification on the Gmail account.
-2. Create an App Password for “Mail”.
-3. Use that app password as `EMAIL_PASS` (never your real password).
+2. Google Account → Security → App passwords.
+3. Create an App Password for “Mail”.
+4. Use that as `EMAIL_PASS` (never your real password).
 
-### Rate Limiting + Honeypot
+### C) Rate Limiting + Honeypot
 The API route includes:
-- Honeypot hidden field
-- Simple in‑memory rate limiting (5 requests per 10 minutes per IP)
+- Honeypot hidden field (`companyWebsite`)
+- In‑memory rate limiting (5 requests per 10 minutes per IP)

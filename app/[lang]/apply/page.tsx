@@ -32,6 +32,7 @@ export default async function ApplyPage({ params }: { params: Promise<{ lang: st
       <section className="section">
         <div className="container card">
           <ApplyForm
+            lang={isFa ? "fa" : "en"}
             labels={
               isFa
                 ? {
@@ -46,7 +47,7 @@ export default async function ApplyPage({ params }: { params: Promise<{ lang: st
                     submitting: "در حال ارسال...",
                     success: "از شما متشکریم! ما به‌زودی با شما تماس می‌گیریم.",
                     scheduling: "رزرو زمان",
-                    direct: "در صورت تمایل، از فرم استفاده کنید. پاسخ در ۲ تا ۳ روز کاری داده می‌شود.",
+                    direct: "ارسال با موفقیت انجام شد. پاسخ در ۲ تا ۳ روز کاری داده می‌شود.",
                     locationOptions: ["اروپا", "ایران", "سایر"],
                     goalOptions: ["آمادگی مهاجرت", "جهت‌گیری شغلی", "هویت + عادت‌ها", "کارآفرینی", "سایر"],
                     formatOptions: [

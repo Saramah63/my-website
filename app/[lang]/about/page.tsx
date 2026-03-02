@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import BodyClass from "@/components/BodyClass";
 
 export const metadata: Metadata = {
   title: "About | Sara Mahmodi",
@@ -17,6 +18,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
   const isFa = lang === "fa";
   return (
     <main>
+      <BodyClass className="bg-motif--soft" />
       <section className="section">
         <div className="container">
           <h1 className="h1">{isFa ? "دربارهٔ من" : "About"}</h1>

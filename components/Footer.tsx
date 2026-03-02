@@ -8,6 +8,9 @@ export default function Footer() {
   const pathname = usePathname() || "";
   const isFa = pathname.startsWith("/fa");
   const base = isFa ? "/fa" : "/en";
+  const emailUser = "contact";
+  const emailDomain = "saramahmodi.com";
+  const emailAddress = `${emailUser}@${emailDomain}`;
   const message = isFa
     ? "سلام، برای دریافت اطلاعات درباره برنامه بازآفرینی استراتژیک پیام می‌دهم."
     : "Hello, I am interested in learning more about your Strategic Reinvention program.";
@@ -20,7 +23,9 @@ export default function Footer() {
           <div className="small">
             Strategic Reinvention Architect. Strategy-led, outcome-focused, confidential.
           </div>
-          <div className="footerContact">contact [at] saramahmodi.com</div>
+          <div className="footerContact">
+            <a href={`mailto:${emailAddress}`}>contact [at] saramahmodi.com</a>
+          </div>
         </div>
 
         <div className="footerLinks">

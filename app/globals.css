@@ -13,6 +13,9 @@
   --shadow: 0 26px 60px rgba(12,18,28,0.12);
   --radius: 18px;
   --header-h: 72px;
+  --bg-pattern-url: url("/patterns/boteh-eslimi-ultra.svg");
+  --bg-pattern-opacity: 0.3;
+  --bg-pattern-size: 520px 520px;
 }
 
 *{ box-sizing: border-box; }
@@ -27,6 +30,33 @@ body{
     linear-gradient(180deg, var(--bg), var(--bg-2));
   color: var(--ink);
   line-height: 1.7;
+}
+
+.bg-motif{
+  position: relative;
+  z-index: 0;
+}
+
+.bg-motif::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: var(--bg-pattern-url);
+  background-repeat: repeat;
+  background-size: var(--bg-pattern-size);
+  opacity: var(--bg-pattern-opacity);
+}
+
+.app-root{
+  position: relative;
+  z-index: 1;
+}
+
+.bg-motif.bg-motif--soft{
+  --bg-pattern-url: url("/patterns/boteh-eslimi-soft.svg");
+  --bg-pattern-opacity: 0.32;
 }
 
 body:lang(fa), [dir="rtl"] body{
@@ -412,6 +442,15 @@ p{ margin: 0; font-size: 16px; }
   .section, .card, .btn, .faqItem{ animation: none; transition: none; }
   .heroCard{ animation: none; }
   .sectionHead .h2::after{ animation: none; }
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg-pattern-opacity: 0.18;
+  }
+  .bg-motif.bg-motif--soft{
+    --bg-pattern-opacity: 0.2;
+  }
 }
 
 @media print{

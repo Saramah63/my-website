@@ -1,17 +1,18 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { EMAIL_ADDRESS, SCHEDULING_URL } from "@/lib/siteConfig";
+import { SCHEDULING_URL } from "@/lib/siteConfig";
 
 type ApplyPayload = {
   name: string;
   email: string;
   location: "Europe" | "Iran" | "Other";
   primaryGoal: string;
-  constraint: string;
-  format: "1:1" | "group";
-  budget?: string;
-  website?: string;
+  biggestConstraint: string;
+  preferredFormat: "1:1" | "group";
+  budgetReadiness?: string;
+  companyWebsite?: string;
+  lang?: "fa" | "en";
 };
 
 type Labels = {
@@ -45,7 +46,7 @@ const DEFAULT_LABELS: Labels = {
   submitting: "Submitting...",
   success: "Application received. If you want to book immediately, use the scheduling link below.",
   scheduling: "Scheduling link",
-  direct: "For direct contact, use the form. We'll respond within 2–3 business days.",
+  direct: "Submitted successfully. We will respond within 2–3 business days.",
   locationOptions: ["Europe", "Iran", "Other"],
   goalOptions: ["Migration readiness", "Career direction", "Identity + habits", "Entrepreneurship", "Other"],
   formatOptions: [
@@ -55,7 +56,13 @@ const DEFAULT_LABELS: Labels = {
   budgetOptions: ["Request details", "< €1,000", "€1,000–€3,000", "€3,000–€7,000", "€7,000+"],
 };
 
-export default function ApplyForm({ labels = DEFAULT_LABELS }: { labels?: Labels }) {
+export default function ApplyForm({
+  labels = DEFAULT_LABELS,
+  lang = "en",
+}: {
+  labels?: Labels;
+  lang?: "fa" | "en";
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -63,11 +70,12 @@ export default function ApplyForm({ labels = DEFAULT_LABELS }: { labels?: Labels
     name: "",
     email: "",
     location: "Europe",
-    primaryGoal: "Clarity and direction",
-    constraint: "",
-    format: "1:1",
-    budget: "",
-    website: "",
+    primaryGoal: "Migration readiness",
+    biggestConstraint: "",
+    preferredFormat: "1:1",
+    budgetReadiness: "",
+    companyWebsite: "",
+    lang,
   });
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -79,17 +87,17 @@ export default function ApplyForm({ labels = DEFAULT_LABELS }: { labels?: Labels
       const res = await fetch("/api/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, lang }),
       });
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data?.ok !== true) {
-        throw new Error(data?.error || "Unable to submit your application.");
+        throw new Error("Submission failed");
       }
 
       setSuccess(true);
-    } catch (err: any) {
-      setError(err?.message || "Something went wrong.");
+    } catch {
+      setError(lang === "fa" ? "ارسال با خطا مواجه شد. لطفاً دوباره تلاش کنید." : "Submission failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -154,8 +162,8 @@ export default function ApplyForm({ labels = DEFAULT_LABELS }: { labels?: Labels
           className="textarea"
           id="constraint"
           required
-          value={form.constraint}
-          onChange={(e) => setForm((p) => ({ ...p, constraint: e.target.value }))}
+          value={form.biggestConstraint}
+          onChange={(e) => setForm((p) => ({ ...p, biggestConstraint: e.target.value }))}
         />
       </div>
 
@@ -164,8 +172,8 @@ export default function ApplyForm({ labels = DEFAULT_LABELS }: { labels?: Labels
         <select
           id="format"
           className="input"
-          value={form.format}
-          onChange={(e) => setForm((p) => ({ ...p, format: e.target.value as ApplyPayload["format"] }))}
+          value={form.preferredFormat}
+          onChange={(e) => setForm((p) => ({ ...p, preferredFormat: e.target.value as ApplyPayload["preferredFormat"] }))}
         >
           {labels.formatOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -178,8 +186,8 @@ export default function ApplyForm({ labels = DEFAULT_LABELS }: { labels?: Labels
         <select
           id="budget"
           className="input"
-          value={form.budget}
-          onChange={(e) => setForm((p) => ({ ...p, budget: e.target.value }))}
+          value={form.budgetReadiness}
+          onChange={(e) => setForm((p) => ({ ...p, budgetReadiness: e.target.value }))}
         >
           {labels.budgetOptions.map((opt) => (
             <option key={opt}>{opt}</option>
@@ -188,12 +196,12 @@ export default function ApplyForm({ labels = DEFAULT_LABELS }: { labels?: Labels
       </div>
 
       <div className="field" style={{ display: "none" }} aria-hidden="true">
-        <label className="label" htmlFor="website">Website</label>
+        <label className="label" htmlFor="companyWebsite">Website</label>
         <input
           className="input"
-          id="website"
-          value={form.website}
-          onChange={(e) => setForm((p) => ({ ...p, website: e.target.value }))}
+          id="companyWebsite"
+          value={form.companyWebsite}
+          onChange={(e) => setForm((p) => ({ ...p, companyWebsite: e.target.value }))}
           tabIndex={-1}
           autoComplete="off"
         />
@@ -210,11 +218,11 @@ export default function ApplyForm({ labels = DEFAULT_LABELS }: { labels?: Labels
         {loading ? labels.submitting : labels.submit}
       </button>
 
-      <a className="btn" href={SCHEDULING_URL || "#"} target="_blank" rel="noreferrer">
+      <a className="btn" href={SCHEDULING_URL || "#"} target="_blank" rel="noopener noreferrer">
         {labels.scheduling}
       </a>
 
-      <p className="small">{labels.direct}</p>
+      {success ? <p className="small">{labels.direct}</p> : null}
     </form>
   );
 }

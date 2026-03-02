@@ -2,6 +2,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import LangHtmlSync from "../components/LangHtmlSync";
+import { ENABLE_BOTEH_BG } from "@/lib/siteConfig";
 
 export const metadata: Metadata = {
   title: "Sara Mahmodi | Strategic Reinvention Architect",
@@ -19,10 +20,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // Root layout MUST be the only place with <html> and <body>
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className={ENABLE_BOTEH_BG ? "bg-motif" : undefined}>
         {/* Sync html lang/dir AFTER hydration to avoid mismatch */}
         <LangHtmlSync />
-        {children}
+        <div id="app" className="app-root">
+          {children}
+        </div>
       </body>
     </html>
   );

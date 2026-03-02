@@ -68,11 +68,34 @@ export default async function OneToOnePage({ params }: { params: Promise<{ lang:
       </section>
 
       <section className="section">
+        <div className="container grid2">
+          <div className="card">
+            <h2 className="h3">{isFa ? "انتظارات همکاری" : "Commitment expectations"}</h2>
+            <ul className="list">
+              <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "اجرای منظم بین جلسات" : "Consistent execution between sessions"}</li>
+              <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "پاسخگویی شفاف و به‌موقع" : "Clear, timely accountability"}</li>
+              <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "پذیرش بازخورد و اصلاح مسیر" : "Openness to feedback and recalibration"}</li>
+            </ul>
+          </div>
+          <div className="card">
+            <h2 className="h3">{isFa ? "فرآیند پذیرش" : "Application process"}</h2>
+            <ul className="list">
+              <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "درخواست" : "Apply"}</li>
+              <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "جلسه استراتژیک" : "Strategic Session"}</li>
+              <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "پذیرش" : "Acceptance"}</li>
+              <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "شروع" : "Start"}</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
         <div className="container card">
           <h2 className="h2">{isFa ? "فرآیند" : "Process"}</h2>
           <ul className="list">
             <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "درخواست" : "Apply"}</li>
-            <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "بررسی" : "Review"}</li>
+            <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "جلسه استراتژیک" : "Strategic Session"}</li>
+            <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "پذیرش" : "Acceptance"}</li>
             <li className="listItem"><span className="dot" aria-hidden="true" />{isFa ? "شروع" : "Start"}</li>
           </ul>
           <div className="heroActions">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PrintButton from "@/components/PrintButton";
+import BodyClass from "@/components/BodyClass";
 
 export const metadata: Metadata = {
   title: "Welcome Pack | Sara Mahmodi",
@@ -17,6 +18,7 @@ export default async function WelcomePackPage({ params }: { params: Promise<{ la
 
   return (
     <main className="welcome">
+      <BodyClass className="bg-motif--soft" />
       <section className="section">
         <div className="container">
           <h1 className="h1">{isFa ? "بستهٔ خوش‌آمد" : "Welcome Pack"}</h1>

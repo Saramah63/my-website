@@ -21,6 +21,8 @@ type Ctx = {
 };
 
 const dictionaries: Record<Lang, Dict> = { fa, en };
+const LANG_COOKIE = "lang";
+const LANG_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 // default context (Fail-safe): باعث می‌شود اگر Provider هم نبود کرش نکند
 const LanguageContext = createContext<Ctx>({
@@ -55,6 +57,10 @@ export function LanguageProvider({
     const next = initialLang ?? detected;
     setLangState(next);
   }, [initialLang, detected]);
+
+  useEffect(() => {
+    document.cookie = `${LANG_COOKIE}=${lang};path=/;max-age=${LANG_COOKIE_MAX_AGE};samesite=lax`;
+  }, [lang]);
 
   const setLang = (l: Lang) => {
     setLangState(l);

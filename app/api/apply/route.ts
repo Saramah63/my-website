@@ -53,20 +53,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    // NOTE: This file-based storage is intended for dev only.
-    // Replace with your database or email delivery in production.
-    let current: unknown[] = [];
-    try {
-      const raw = await fs.readFile(STORE_PATH, "utf8");
-      current = JSON.parse(raw) as unknown[];
-    } catch {
-      current = [];
-    }
-
-    current.push(payload);
-    await fs.mkdir(path.dirname(STORE_PATH), { recursive: true });
-    await fs.writeFile(STORE_PATH, JSON.stringify(current, null, 2));
-
     if (!EMAIL_USER || !EMAIL_PASS || !NOTIFICATION_EMAIL) {
       console.error("Email config missing: EMAIL_USER/EMAIL_PASS/NOTIFICATION_EMAIL");
       return NextResponse.json(
@@ -107,6 +93,26 @@ export async function POST(req: Request) {
         { ok: false, error: "Email delivery failed. Please try again later." },
         { status: 500 }
       );
+    }
+
+    // NOTE: File-based storage is intended for local dev only.
+    // Vercel/production file system is read-only, so skip it there.
+    if (!process.env.VERCEL) {
+      try {
+        let current: unknown[] = [];
+        try {
+          const raw = await fs.readFile(STORE_PATH, "utf8");
+          current = JSON.parse(raw) as unknown[];
+        } catch {
+          current = [];
+        }
+
+        current.push(payload);
+        await fs.mkdir(path.dirname(STORE_PATH), { recursive: true });
+        await fs.writeFile(STORE_PATH, JSON.stringify(current, null, 2));
+      } catch (err) {
+        console.error("Local storage failed", err);
+      }
     }
 
     return NextResponse.json({

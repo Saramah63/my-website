@@ -1,6 +1,7 @@
 // app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import LangHtmlSync from "../components/LangHtmlSync";
 import { ENABLE_BOTEH_BG } from "@/lib/siteConfig";
 
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div id="app" className="app-root">
           {children}
         </div>
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -39,7 +39,7 @@ export default function FinalCTA() {
               href="https://calendly.com/saramah63/30min"
 target="_blank"
 rel="noreferrer"
-              className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+              className="ctaBlueButton mt-6 inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700"
             >
               Book Free Consultation
             </a>

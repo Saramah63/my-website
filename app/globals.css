@@ -190,6 +190,23 @@ p{ margin: 0; font-size: 16px; }
   border-color: #192436;
   box-shadow: 0 18px 34px rgba(25,36,54,0.22);
 }
+.btnPrimary:hover,
+.btnPrimary:focus-visible{
+  background: #e7f0ff;
+  color: #0b0f14;
+  border-color: #99b5e6;
+  box-shadow: 0 12px 26px rgba(17,24,39,0.14);
+}
+
+.ctaBlueButton{
+  transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.ctaBlueButton:hover,
+.ctaBlueButton:focus-visible{
+  background: #e7f0ff !important;
+  color: #0b0f14 !important;
+  box-shadow: 0 12px 26px rgba(17,24,39,0.14);
+}
 
 .btnGhost{ background: transparent; }
 

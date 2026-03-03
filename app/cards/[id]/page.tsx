@@ -10,7 +10,6 @@ type Card = {
   text: string;
   pairId: string;
   routeId: string; // "01"..."26" for both cards in a pair
-  audio: string;   // "/audio/01.mp3" ... "/audio/26.mp3"
 };
 
 type CardsMap = Record<string, Card>;
@@ -55,17 +54,6 @@ export default async function CardPage({
         </header>
 
         <h1 style={styles.title}>{card.text}</h1>
-
-        <section style={styles.block}>
-          <p style={styles.mini}>Guided audio (60–90 seconds)</p>
-          <audio controls preload="none" style={styles.audio}>
-            <source src={card.audio} />
-            Your browser does not support the audio element.
-          </audio>
-          <p style={styles.note}>
-            Keep it small. Keep it real.
-          </p>
-        </section>
 
         {paired && (
           <section style={styles.paired}>
@@ -140,14 +128,6 @@ const styles: Record<string, React.CSSProperties> = {
     letterSpacing: -0.2,
     color: "#111827"
   },
-  block: {
-    borderTop: "1px solid rgba(31,35,40,0.08)",
-    borderBottom: "1px solid rgba(31,35,40,0.08)",
-    padding: "16px 0",
-    marginBottom: 18
-  },
-  audio: { width: "100%" },
-  note: { margin: "10px 0 0", fontSize: 12, color: "rgba(31,35,40,0.65)" },
   paired: { marginBottom: 18 },
   pairedHead: { display: "flex", justifyContent: "space-between", marginBottom: 8, gap: 12 },
   pairedCard: {

@@ -3,13 +3,13 @@ import { redirect } from "next/navigation";
 
 const LANG_COOKIE = "lang";
 
-function pickLangFromHeaders(): "fa" | "en" {
-  const accept = headers().get("accept-language") || "";
+async function pickLangFromHeaders(): Promise<"fa" | "en"> {
+  const accept = (await headers()).get("accept-language") || "";
   return accept.toLowerCase().includes("fa") ? "fa" : "en";
 }
 
-export default function Root() {
-  const cookieLang = cookies().get(LANG_COOKIE)?.value;
-  const lang = cookieLang === "fa" || cookieLang === "en" ? cookieLang : pickLangFromHeaders();
+export default async function Root() {
+  const cookieLang = (await cookies()).get(LANG_COOKIE)?.value;
+  const lang = cookieLang === "fa" || cookieLang === "en" ? cookieLang : await pickLangFromHeaders();
   redirect(`/${lang}`);
 }

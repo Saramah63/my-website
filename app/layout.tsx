@@ -6,13 +6,13 @@ import LangHtmlSync from "../components/LangHtmlSync";
 import { ENABLE_BOTEH_BG } from "@/lib/siteConfig";
 
 export const metadata: Metadata = {
-  title: "Sara Mahmodi | Strategic Reinvention Architect",
+  title: "Sara Mahmodi | Product-Focused Designer, Founder, and Strategic Builder",
   description:
-    "Structured, outcome-driven coaching for Persian-speaking immigrants and future migrants seeking clarity, direction, and measurable progress.",
+    "Sara Mahmodi builds structured digital products and human-centered systems across Donepage, Lumi, and strategic product work.",
   openGraph: {
-    title: "Sara Mahmodi | Strategic Reinvention Architect",
+    title: "Sara Mahmodi | Product-Focused Designer, Founder, and Strategic Builder",
     description:
-      "Structured, outcome-driven coaching for Persian-speaking immigrants and future migrants seeking clarity, direction, and measurable progress.",
+      "Sara Mahmodi builds structured digital products and human-centered systems across Donepage, Lumi, and strategic product work.",
     type: "website",
   },
 };
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div id="app" className="app-root">
           {children}
         </div>
-        <SpeedInsights />
+        {process.env.VERCEL ? <SpeedInsights /> : null}
       </body>
     </html>
   );

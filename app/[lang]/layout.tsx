@@ -16,12 +16,12 @@ export async function generateMetadata({
   const isFa = lang === "fa";
 
   const title = isFa
-    ? "سارا محمودی | معمار بازآفرینی راهبردی"
-    : "Sara Mahmodi | Strategic Reinvention Architect";
+    ? "سارا محمودی | معرفی و همکاری"
+    : "Sara Mahmodi | Product-Focused Designer, Founder, and Strategic Builder";
 
   const description = isFa
-    ? "کوچینگ ساختارمند برای مهاجران فارسی‌زبان و افرادی که برای مهاجرت آماده می‌شوند؛ با تمرکز بر وضوح، جهت‌گیری و پیشرفت قابل سنجش."
-    : "Structured coaching for Persian-speaking immigrants and individuals preparing for migration — built on clarity, direction, and measurable progress.";
+    ? "صفحه فارسی سارا محمودی برای معرفی کوتاه، درباره من، و درخواست همکاری."
+    : "Sara Mahmodi builds structured digital products and human-centered systems across Donepage, Lumi, and strategic product work.";
 
   const url = `/${lang}`;
 
@@ -45,7 +45,6 @@ export default async function LangLayout({
 }) {
   const { lang: raw } = await params;
   const lang: Lang = raw === "fa" ? "fa" : "en";
-  const dir = lang === "fa" ? "rtl" : "ltr";
 
   return (
         <LanguageProvider initialLang={lang}>

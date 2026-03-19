@@ -10,6 +10,9 @@ export const INSTAGRAM_URL =
   process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com/mindshift_for_lifeshift/";
 export const EMAIL_ADDRESS = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@saramahmodi.com";
 export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "358417539326";
+export const WHATSAPP_MESSAGE =
+  process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE || "سلام، برای همکاری با شما پیام می‌دهم.";
+export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 export const EMAIL_USER = process.env.EMAIL_USER || "";
 export const EMAIL_PASS = process.env.EMAIL_PASS || "";

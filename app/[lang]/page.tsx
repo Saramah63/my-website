@@ -1,347 +1,436 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { WHATSAPP_URL } from "@/lib/siteConfig";
+import TypingHeroHeadline from "@/components/TypingHeroHeadline";
 
 export const metadata: Metadata = {
-  title: "Sara Mahmodi | Strategic Reinvention Architect",
+  title: "Sara Mahmodi | Product-Focused Designer, Founder, and Strategic Builder",
   description:
-    "Structured coaching for Persian-speaking immigrants in Europe and individuals preparing for migration — built on clarity, habit architecture, and execution systems.",
+    "Founder of Donepage and Lumi. Product-focused designer working across digital services, emotional intelligence, and real-world impact.",
   openGraph: {
-    title: "Sara Mahmodi | Strategic Reinvention Architect",
+    title: "Sara Mahmodi | Product-Focused Designer, Founder, and Strategic Builder",
     description:
-      "Structured coaching for Persian-speaking immigrants in Europe and individuals preparing for migration — built on clarity, habit architecture, and execution systems.",
+      "Founder of Donepage and Lumi. Product-focused designer working across digital services, emotional intelligence, and real-world impact.",
     type: "website",
   },
 };
 
-export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
-  const isFa = lang === "fa";
-  const base = isFa ? "/fa" : "/en";
+const buildItems = [
+  {
+    name: "Donepage",
+    label: "Commercial product",
+    description: "Conversion-focused landing pages for service businesses.",
+    href: "https://donepage.co",
+    cta: "Go to Donepage",
+  },
+  {
+    name: "Lumi",
+    label: "Innovation product",
+    description: "An early-stage emotional learning product for children.",
+    href: "/en/lumi",
+    cta: "Explore Lumi",
+  },
+  {
+    name: "Strategic Work",
+    label: "Selective service",
+    description: "Structured support for people navigating decisions and transitions.",
+    href: "/en/work-with-me",
+    cta: "Apply to work with me",
+  },
+];
+
+function PersianPage() {
   return (
-    <main>
-      <section className="section">
-        <div className="container hero">
-          <div>
-            <p className="eyebrow">{isFa ? "معمار بازآفرینی استراتژیک" : "Strategic Reinvention Architect"}</p>
-            <h1 className="h1">
-              {isFa ? "تحول هدفمند آینده‌ات را طراحی کن." : "Design Your Reinvention Strategically."}
+    <main className="founderHome">
+      <section className="founderHero">
+        <div className="container founderHeroShell serviceHeroShell">
+          <div className="founderHeroCopy">
+            <p className="founderKicker">همکاری ساختارمند</p>
+            <h1 className="founderDisplay founderDisplayFa">
+              اگر در مسیرت گیر کرده‌ای و نمی‌دانی قدم بعدی چیست، اینجا برای حرکت است، نه فقط فکر کردن.
             </h1>
-            <p className="muted">
-              {isFa
-                ? "کوچینگ استراتژیک برای فارسی‌زبانان مقیم اروپا و افرادی که آماده مهاجرت هستند — مبتنی بر شفافیت، ساختار و نظام اجرایی."
-                : "Structured coaching for Persian-speaking immigrants in Europe and individuals preparing for migration — built on clarity, habit architecture, and execution systems."}
+            <p className="founderLead">
+              کار ساختاریافته برای رسیدن به وضوح، تصمیم بهتر و پیشرفت واقعی.
             </p>
-            <div className="heroActions">
-              <Link className="btn btnPrimary" href={`${base}/apply`}>
-                {isFa ? "رزرو جلسهٔ استراتژیک" : "Book a Strategic Session"}
+            <div className="founderHeroActions">
+              <Link className="btn btnPrimary founderButton" href="/fa/apply">
+                درخواست همکاری
               </Link>
-              <a className="btn btnGhost" href="#framework">
-                {isFa ? "آشنایی با متد" : "Explore the Method"}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="founderSection">
+        <div className="container founderSplit">
+          <div>
+            <p className="founderKicker">این همکاری برای چه کسانی است</p>
+            <h2 className="founderHeading">این کار برای تو مناسب است اگر</h2>
+          </div>
+          <div className="founderReadable founderReadableNarrow">
+            <div className="founderList">
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">در حال تغییر مسیر، مهاجرت یا تصمیم مهمی هستی</p>
+              </div>
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">احساس سردرگمی یا عدم وضوح داری</p>
+              </div>
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">زیاد فکر می‌کنی ولی حرکت نمی‌کنی</p>
+              </div>
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">می‌خواهی از ایده به اقدام برسی</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="founderSection founderSectionAlt">
+        <div className="container founderSplit">
+          <div>
+            <p className="founderKicker">این کار چه کمکی می‌کند</p>
+            <h2 className="founderHeading">در این مسیر</h2>
+          </div>
+          <div className="founderReadable founderReadableNarrow">
+            <div className="founderList">
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">وضعیتت به‌صورت دقیق بررسی می‌شود</p>
+              </div>
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">موانع واقعی مشخص می‌شوند</p>
+              </div>
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">مسیر واضح و قابل اجرا طراحی می‌شود</p>
+              </div>
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">تمرکز روی اقدام است، نه فقط صحبت</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="founderSection founderSectionAlt">
+        <div className="container founderFeature">
+          <div className="founderFeatureIntro">
+            <p className="founderKicker">تفاوت این کار با بقیه</p>
+            <h2 className="founderHeading">این کار بر پایه وضوح، ساختار و اجرا است.</h2>
+          </div>
+          <div className="founderPanel serviceFilterCard">
+            <div className="founderList">
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">انگیزشی نیست</p>
+              </div>
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">تئوری نیست</p>
+              </div>
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">مبهم نیست</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="founderSection founderSectionAlt">
+        <div className="container founderSectionShell">
+          <div>
+            <p className="founderKicker">نحوه همکاری</p>
+            <h2 className="founderHeading">دو مسیر برای شروع کار</h2>
+          </div>
+          <div className="serviceOfferGrid">
+            <div className="founderPanel serviceOfferCard serviceOfferCardFeatured">
+              <h3 className="serviceOfferTitle">جلسه استراتژیک</h3>
+              <p className="founderBody">برای زمانی که نیاز داری وضعیتت را واضح ببینی و مسیر مشخصی داشته باشی</p>
+              <div className="founderList founderListCompact">
+                <div className="founderListItem">
+                  <span className="founderListMark" aria-hidden="true" />
+                  <p className="founderBody">بررسی دقیق وضعیت</p>
+                </div>
+                <div className="founderListItem">
+                  <span className="founderListMark" aria-hidden="true" />
+                  <p className="founderBody">شفاف‌سازی</p>
+                </div>
+                <div className="founderListItem">
+                  <span className="founderListMark" aria-hidden="true" />
+                  <p className="founderBody">برنامه اجرایی ۱۴ روزه</p>
+                </div>
+              </div>
+              <div className="serviceOfferActions">
+                <Link className="btn btnPrimary founderButton" href="/fa/apply">
+                  رزرو جلسه
+                </Link>
+              </div>
+            </div>
+
+            <div className="founderPanel serviceOfferCard">
+              <h3 className="serviceOfferTitle">همکاری سه‌ماهه (۱ به ۱)</h3>
+              <p className="founderBody">برای زمانی که نیاز به پیشرفت مستمر و ساختار داری</p>
+              <div className="founderList founderListCompact">
+                <div className="founderListItem">
+                  <span className="founderListMark" aria-hidden="true" />
+                  <p className="founderBody">مراحل مشخص</p>
+                </div>
+                <div className="founderListItem">
+                  <span className="founderListMark" aria-hidden="true" />
+                  <p className="founderBody">ساختاردهی عادت‌ها</p>
+                </div>
+                <div className="founderListItem">
+                  <span className="founderListMark" aria-hidden="true" />
+                  <p className="founderBody">سیستم اجرایی</p>
+                </div>
+              </div>
+              <div className="serviceOfferActions">
+                <Link className="btn founderButton founderButtonGhost" href="/fa/apply">
+                  درخواست همکاری
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="founderSection founderSectionAlt">
+        <div className="container founderFeature">
+          <div className="founderFeatureIntro">
+            <p className="founderKicker">برای چه کسانی مناسب نیست</p>
+            <h2 className="founderHeading">این همکاری مناسب تو نیست اگر</h2>
+          </div>
+          <div className="founderPanel serviceFilterCard">
+            <div className="founderList founderListCompact">
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">فقط دنبال انگیزه هستی</p>
+              </div>
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">از اقدام واقعی اجتناب می‌کنی</p>
+              </div>
+              <div className="founderListItem">
+                <span className="founderListMark" aria-hidden="true" />
+                <p className="founderBody">انتظار نتیجه سریع بدون تلاش داری</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="founderSection founderSectionAlt">
+        <div className="container founderFeature">
+          <div className="founderFeatureIntro">
+            <p className="founderKicker">زیرساخت دیجیتال</p>
+            <h2 className="founderHeading">
+              اگر در حال ساخت یا توسعه کسب‌وکار هستی، می‌توانی حضور آنلاین خود را به‌صورت واضح و
+              حرفه‌ای بسازی.
+            </h2>
+            <div className="founderHeroActions">
+              <a className="btn btnPrimary founderButton" href="https://donepage.co" target="_blank" rel="noreferrer">
+                مشاهده Donepage
               </a>
             </div>
-            <div className="heroMeta">
-              {isFa ? "ساختارمند. نتیجه‌گرا. حرفه‌ای." : "Strategy-led. Outcome-focused. Confidential."}
+          </div>
+        </div>
+      </section>
+
+      <section className="founderSection founderSectionAlt">
+        <div className="container founderSectionShell">
+          <div className="founderSectionHeading">
+            <p className="founderKicker">سرمایه‌گذاری</p>
+            <h2 className="founderHeading">سرمایه‌گذاری</h2>
+          </div>
+          <div className="serviceMetaGrid">
+            <div className="founderPanel serviceMetaCard">
+              <p className="founderCardLabel">جلسه استراتژیک</p>
+              <p className="serviceMetaValue">هزینه پس از درخواست اعلام می‌شود</p>
+            </div>
+            <div className="founderPanel serviceMetaCard">
+              <p className="founderCardLabel">همکاری سه‌ماهه</p>
+              <p className="serviceMetaValue">بر اساس سطح نیاز و تعهد</p>
             </div>
           </div>
-          <div className="heroCard">
-            <p className="eyebrow">{isFa ? "جلسهٔ شفاف‌سازی" : "Clarity Session"}</p>
-            <h2 className="h2">
-              {isFa ? "تشخیص دقیق برای بازتنظیم مسیر." : "A focused diagnostic to reset direction."}
-            </h2>
-            <p className="muted">
-              {isFa
-                ? "محدودیت‌ها را مشخص کنید، اولویت‌ها را شفاف کنید و با یک برنامهٔ اجرایی دقیق خارج شوید."
-                : "Identify constraints, clarify priorities, and leave with a structured next-step plan you can execute immediately."}
+        </div>
+      </section>
+
+      <section className="founderSection founderSectionAlt founderSectionLast">
+        <div className="container founderFeature">
+          <div className="founderFeatureIntro">
+            <p className="founderKicker">CTA نهایی</p>
+            <h2 className="founderHeading">اگر آماده‌ای از سردرگمی به سمت وضوح و اقدام حرکت کنی</h2>
+            <div className="founderHeroActions">
+              <Link className="btn btnPrimary founderButton" href="/fa/apply">
+                درخواست همکاری
+              </Link>
+              <a
+                className="btn founderButton founderButtonGhost"
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noreferrer"
+              >
+                ارتباط در واتساپ
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="founderSection founderSectionAlt founderSectionLast">
+        <div className="container founderFeature">
+          <div className="founderFeatureIntro">
+            <p className="founderKicker">ظرفیت</p>
+            <h2 className="founderHeading">ظرفیت محدود برای حفظ کیفیت</h2>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+
+  if (lang === "fa") {
+    return <PersianPage />;
+  }
+
+  return (
+    <main className="founderHome">
+      <section className="founderHero">
+        <div className="container founderHeroShell">
+          <div className="founderHeroCopy">
+            <p className="founderKicker">Sara Mahmodi</p>
+            <TypingHeroHeadline />
+            <p className="founderLead">
+              Founder of Donepage and Lumi. Product-focused designer working across digital services and
+              real-world impact.
             </p>
-            <div className="heroActions">
-              <Link className="btn" href={`${base}/work-with-me`}>
-                {isFa ? "مشاهدهٔ خدمات" : "See Offers"}
+            <div className="founderHeroActions">
+              <a className="btn btnPrimary founderButton" href="https://donepage.co" target="_blank" rel="noreferrer">
+                Explore Donepage
+              </a>
+              <Link className="btn founderButton founderButtonGhost" href="/en/lumi">
+                Explore Lumi
+              </Link>
+              <Link className="btn founderButton founderButtonGhost" href="/en/work-with-me">
+                Work With Me
               </Link>
             </div>
+            <p className="founderSupportLine">Also open to selected Product / UX opportunities.</p>
           </div>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container">
-          <div className="sectionHead">
-            <h2 className="h2">{isFa ? "چه کسانی را همراهی می‌کنم" : "Who I Help"}</h2>
+      <section id="what-i-build" className="founderSection">
+        <div className="container founderSectionShell">
+          <div className="founderSectionHeading">
+            <p className="founderKicker">What I Build</p>
+            <h2 className="founderHeading">Three focused areas of work.</h2>
           </div>
-          <ul className="list">
-            <li className="listItem">
-              <span className="dot" aria-hidden="true" />
-              <span>
-                {isFa
-                  ? "فارسی‌زبانان مقیم اروپا که با چالش‌های هویتی، حرفه‌ای و سازگاری روبه‌رو هستند"
-                  : "Persian-speaking immigrants in Europe navigating identity, career, and adaptation challenges"}
-              </span>
-            </li>
-            <li className="listItem">
-              <span className="dot" aria-hidden="true" />
-              <span>
-                {isFa
-                  ? "افرادی در ایران که در مسیر آماده‌سازی برای مهاجرت می‌خواهند جهت‌گیری استراتژیک داشته باشند"
-                  : "Individuals in Iran preparing for migration who want strategic direction and readiness."}
-              </span>
-            </li>
-            <li className="listItem">
-              <span className="dot" aria-hidden="true" />
-              <span>
-                {isFa
-                  ? "افراد با پتانسیل بالا که بین آرزو و اجرا گیر کرده‌اند و به ساختار نیاز دارند"
-                  : "High-potential individuals stuck between ambition and uncertainty who want structure."}
-              </span>
-            </li>
-          </ul>
+          <div className="founderBuildGrid">
+            {buildItems.map((item) => {
+              const content = (
+                <>
+                  <div className="founderBuildTop">
+                    <p className="founderCardLabel">{item.label}</p>
+                    <h3 className="founderCardTitle">{item.name}</h3>
+                  </div>
+                  <p className="founderBody">{item.description}</p>
+                  <span className="founderInlineLink">{item.cta}</span>
+                </>
+              );
+
+              if (item.href.startsWith("http")) {
+                return (
+                  <a
+                    key={item.name}
+                    className="founderPanel founderBuildCard"
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {content}
+                  </a>
+                );
+              }
+
+              return (
+                <Link key={item.name} className="founderPanel founderBuildCard" href={item.href}>
+                  {content}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container grid2">
+      <section id="about" className="founderSection founderSectionAlt">
+        <div className="container founderSplit">
           <div>
-            <p className="eyebrow">{isFa ? "تمایز" : "What Makes This Different"}</p>
-            <h2 className="h2">{isFa ? "تمایز رویکرد" : "Architectural, not motivational."}</h2>
-            <p className="muted">
-              {isFa
-                ? "این یک کوچینگ ساختارمند و مهندسی‌شده است، نه انگیزشیِ ساده. ما هویت، عادت‌ها و سیستم اجرا را طراحی می‌کنیم تا پیشرفت قابل اندازه‌گیری شود."
-                : "This is architectural coaching — not motivational talk. We design identity, habits, and execution systems so progress becomes measurable."}
+            <p className="founderKicker">About</p>
+            <h2 className="founderHeading">A product-driven approach to practical, usable work.</h2>
+          </div>
+          <div className="founderReadable">
+            <p className="founderBody">
+              I design and build digital products with a focus on clarity, usability, and real-world application.
+            </p>
+            <p className="founderBody">
+              My work combines product thinking, user experience, and structured execution to turn ideas into
+              practical, usable systems.
+            </p>
+            <p className="founderBody">
+              Currently building:
+              <br />
+              Donepage - a landing page system for service businesses
+              <br />
+              Lumi - an early-stage emotional learning product for children
+            </p>
+            <p className="founderBody">
+              Alongside this, I work selectively with individuals on clarity, direction, and structured
+              progress.
+            </p>
+            <p className="founderBody">
+              I am also growing toward Product Owner roles, with hands-on experience in building and
+              testing real products.
             </p>
           </div>
-          <div className="card">
-            {isFa ? (
-              <ul className="list">
-                <li className="listItem">
-                  <span className="dot" aria-hidden="true" />
-                  <span>بازتعریف هویت</span>
-                </li>
-                <li className="listItem">
-                  <span className="dot" aria-hidden="true" />
-                  <span>معماری عادت‌ها</span>
-                </li>
-                <li className="listItem">
-                  <span className="dot" aria-hidden="true" />
-                  <span>سیستم‌های اجرا</span>
-                </li>
-                <li className="listItem">
-                  <span className="dot" aria-hidden="true" />
-                  <span>ابزارهای مدرن دیجیتال و پشتیبانی AI</span>
-                </li>
-              </ul>
-            ) : (
-              <ul className="list">
-                <li className="listItem">
-                  <span className="dot" aria-hidden="true" />
-                  <span>Identity recalibration</span>
-                </li>
-                <li className="listItem">
-                  <span className="dot" aria-hidden="true" />
-                  <span>Habit architecture</span>
-                </li>
-                <li className="listItem">
-                  <span className="dot" aria-hidden="true" />
-                  <span>Strategic execution systems</span>
-                </li>
-                <li className="listItem">
-                  <span className="dot" aria-hidden="true" />
-                  <span>Modern digital + AI-supported tools as enablers</span>
-                </li>
-              </ul>
-            )}
-          </div>
         </div>
       </section>
 
-      <section id="framework" className="section">
-        <div className="container">
-          <div className="sectionHead">
-            <h2 className="h2">{isFa ? "چارچوب معماری بازآفرینی™" : "The Reinvention Architecture™"}</h2>
-            <p className="muted">
-              {isFa
-                ? "یک روش روشن برای گذار از عدم قطعیت به پیشرفت ساختارمند."
-                : "A clear method to move from uncertainty to structured progress."}
+      <section id="roles" className="founderSection founderSectionAlt founderSectionLast">
+        <div className="container founderFeature">
+          <div className="founderFeatureIntro">
+            <p className="founderKicker">Open To Roles</p>
+            <h2 className="founderHeading">Open to selected Product and UX opportunities.</h2>
+            <p className="founderBody">
+              Bringing hands-on experience in building, testing, and iterating real products.
             </p>
           </div>
-          <div className="grid4">
-            <div className="card frameworkCard">
-              <p className="eyebrow">{isFa ? "۱. تشخیص" : "1. Diagnose"}</p>
-              <h3 className="h3">
-                {isFa ? "شفاف‌سازی هویت، محدودیت‌ها و اولویت‌ها" : "Clarify identity, constraints, priorities."}
-              </h3>
-            </div>
-            <div className="card frameworkCard">
-              <p className="eyebrow">{isFa ? "۲. بازطراحی" : "2. Redesign"}</p>
-              <h3 className="h3">
-                {isFa ? "تعریف جهت‌گیری و اهداف" : "Define direction, decisions, goals."}
-              </h3>
-            </div>
-            <div className="card frameworkCard">
-              <p className="eyebrow">{isFa ? "۳. ساختاردهی" : "3. Structure"}</p>
-              <h3 className="h3">
-                {isFa ? "نصب عادت‌ها و سیستم اجرا" : "Install habits and an execution system."}
-              </h3>
-            </div>
-            <div className="card frameworkCard">
-              <p className="eyebrow">{isFa ? "۴. گسترش" : "4. Expand"}</p>
-              <h3 className="h3">
-                {isFa ? "توسعه توانمندی‌ها و فرصت‌ها" : "Scale capability and opportunity."}
-              </h3>
-            </div>
-          </div>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container">
-          <div className="sectionHead">
-            <h2 className="h2">{isFa ? "مسیرهای همکاری" : "Ways to Work Together"}</h2>
-          </div>
-          <div className="grid3">
-            <div className="card offerCard">
-              <p className="eyebrow">{isFa ? "اصلی" : "Primary"}</p>
-              <h3 className="h3">{isFa ? "کوچینگ 1:1 معماری بازآفرینی" : "1:1 Strategic Reinvention"}</h3>
-              <p className="muted">{isFa ? "تحول ساختارمند و حرفه‌ای (۱:۱)." : "High-touch structured transformation."}</p>
-              <Link className="btn btnPrimary" href={`${base}/apply`}>
-                {isFa ? "رزرو جلسهٔ استراتژیک" : "Book a Strategic Session"}
-              </Link>
-            </div>
-            <div className="card offerCard">
-              <p className="eyebrow">{isFa ? "گروهی" : "Secondary"}</p>
-              <h3 className="h3">
-                {isFa ? "برنامهٔ گروهی: آزمایشگاه بازآفرینی" : "Group Program: Reinvention Lab"}
-              </h3>
-              <p className="muted">
-                {isFa ? "برنامه گروهی با ساختار و پیگیری." : "Cohort-based execution and accountability."}
-              </p>
-              <Link className="btn" href={`${base}/apply`}>
-                {isFa ? "لیست انتظار" : "Join the Waitlist"}
-              </Link>
-            </div>
-            <div className="card offerCard">
-              <p className="eyebrow">{isFa ? "ارتقا" : "Supporting"}</p>
-              <h3 className="h3">{isFa ? "ارتقای بنیاد دیجیتال" : "Digital Foundation Upgrade"}</h3>
-              <p className="muted">
-                {isFa
-                  ? "برای کارآفرینان؛ ساخت حضور دیجیتال چندزبانه. ارائه از طریق Donepage."
-                  : "For entrepreneurs ready to formalize and launch. Delivered via Donepage."}
-              </p>
-              <Link className="btn" href={`${base}/digital-foundation`}>
-                {isFa ? "ببینید" : "See Digital Foundation"}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="sectionHead">
-            <h2 className="h2">{isFa ? "خروجی‌هایی که می‌توانید انتظار داشته باشید" : "Outcomes you can expect"}</h2>
-          </div>
-          <ul className="list">
-            <li className="listItem">
-              <span className="dot" aria-hidden="true" />
-              <span>{isFa ? "شفافیت مسیر و چارچوب تصمیم‌گیری" : "Clear direction and decision framework"}</span>
-            </li>
-            <li className="listItem">
-              <span className="dot" aria-hidden="true" />
-              <span>{isFa ? "سیستم عادت همسو با اهداف" : "Habit system aligned with goals"}</span>
-            </li>
-            <li className="listItem">
-              <span className="dot" aria-hidden="true" />
-              <span>{isFa ? "کاهش پراکندگی با ساختار اجرایی" : "Reduced overwhelm via execution structure"}</span>
-            </li>
-            <li className="listItem">
-              <span className="dot" aria-hidden="true" />
-              <span>{isFa ? "اعتماد به‌نفس از طریق پیشرفت قابل اندازه‌گیری" : "Confidence through measurable progress"}</span>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container grid2">
+      <section className="founderSection founderSectionAlt founderSectionLast">
+        <div className="container founderSplit">
           <div>
-            <p className="eyebrow">{isFa ? "درباره" : "About"}</p>
-            <h2 className="h2">{isFa ? "درباره" : "Strategic, structured, outcome-driven."}</h2>
-            <p className="muted">
-              {isFa
-                ? "من یک معمار بازآفرینی استراتژیک هستم… تجربه زندگی در ۳ کشور اروپایی (از ۵ ماه تا ۱۰ سال)… استراتژیک، ساختارمند و نتیجه‌محور."
-                : "I am a Strategic Reinvention Architect… lived across three European countries (five months to ten years)… strategic, structured, outcome-driven."}
-            </p>
-            <div className="heroActions">
-              <Link className="btn" href={`${base}/about`}>
-                {isFa ? "داستان کامل را بخوانید" : "Read the full story"}
+            <p className="founderKicker">Footer CTA</p>
+            <h2 className="founderHeading">For collaboration, product work, or inquiries.</h2>
+          </div>
+          <div className="founderReadable founderReadableNarrow">
+            <div className="founderHeroActions">
+              <Link className="btn btnPrimary founderButton" href="/contact">
+                Contact
               </Link>
             </div>
-          </div>
-          <div className="card">
-            <p className="eyebrow">{isFa ? "مسیر نوآوری" : "Innovation Track"}</p>
-            <h3 className="h3">Lumi</h3>
-            <p className="muted">
-              {isFa
-                ? "مسیر تحقیق و توسعه برای تجربه‌های دیجیتال با هوش هیجانی."
-                : "An R&D track exploring emotionally intelligent digital experiences to support conscious growth through technology."}
-            </p>
-            <div className="heroActions">
-              <Link className="btn" href={`${base}/lumi`}>
-                {isFa ? "بیشتر بدانید" : "Learn more"}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="sectionHead">
-            <h2 className="h2">{isFa ? "پرسش‌های رایج" : "FAQ"}</h2>
-          </div>
-          <div className="faq">
-            <details className="faqItem">
-              <summary>{isFa ? "جلسهٔ استراتژیک چیست؟" : "What happens in the Strategic Session?"}</summary>
-              <p className="muted">
-                {isFa
-                  ? "نقشهٔ شفاف، تحلیل محدودیت‌ها و برنامهٔ قدم‌های بعدی."
-                  : "A focused diagnostic: clarity map, constraints analysis, and next-step plan."}
-              </p>
-            </details>
-            <details className="faqItem">
-              <summary>{isFa ? "آیا این برنامه برای اروپا مناسب است یا ایران؟" : "Is it for Europe or Iran?"}</summary>
-              <p className="muted">
-                {isFa
-                  ? "هر دو. هم برای مهاجران فارسی‌زبان در اروپا و هم افراد در ایران."
-                  : "Both. I work with Persian-speaking immigrants in Europe and future migrants in Iran."}
-              </p>
-            </details>
-            <details className="faqItem">
-              <summary>{isFa ? "به چه زبان‌هایی برگزار می‌شود؟" : "Do you offer Persian and English?"}</summary>
-              <p className="muted">{isFa ? "فارسی و انگلیسی." : "Persian-first, English available if needed."}</p>
-            </details>
-            <details className="faqItem">
-              <summary>{isFa ? "برنامهٔ گروهی چگونه است؟" : "How does the group program work?"}</summary>
-              <p className="muted">
-                {isFa ? "۸ هفته با ساختار اجرا و پیگیری." : "An 8-week cohort with execution structure and accountability."}
-              </p>
-            </details>
-            <details className="faqItem">
-              <summary>{isFa ? "آیا می‌توانم برای کسب‌وکار هم کمک بگیرم؟" : "Can you help with business/landing page?"}</summary>
-              <p className="muted">
-                {isFa ? "بله، به‌عنوان ارتقا از طریق Donepage." : "Yes, as an upgrade via Donepage for multilingual positioning."}
-              </p>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container card">
-          <h2 className="h2">
-            {isFa ? "از عدم قطعیت به گسترش ساختارمند برسید." : "Move from uncertainty to structured expansion."}
-          </h2>
-          <div className="heroActions">
-            <Link className="btn btnPrimary" href={`${base}/apply`}>
-              {isFa ? "رزرو / درخواست" : "Apply / Book"}
-            </Link>
           </div>
         </div>
       </section>

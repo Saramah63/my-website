@@ -2,45 +2,71 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import SocialIcons from "@/components/SocialIcons";
+import { useState } from "react";
 
 export default function Header() {
   const pathname = usePathname() || "";
   const isFa = pathname.startsWith("/fa");
-  const base = isFa ? "/fa" : "/en";
+  const englishBase = "/en";
   const otherLang = isFa ? "/en" : "/fa";
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <header className="header">
       <div className="container headerInner">
-        <Link href={base} className="brand">
+        <Link href={isFa ? "/fa" : englishBase} className="brand" onClick={closeMenu}>
           Sara Mahmodi
         </Link>
 
-        <nav className="nav" aria-label="Main">
-          <Link className="navLink" href={base}>
-            {isFa ? "خانه" : "Home"}
-          </Link>
-          <Link className="navLink" href={`${base}/work-with-me`}>
-            {isFa ? "با من کار کنید" : "Work With Me"}
-          </Link>
-          <Link className="navLink" href={`${base}/about`}>
-            {isFa ? "درباره" : "About"}
-          </Link>
-          <Link className="navLink" href={`${base}/apply`}>
-            {isFa ? "درخواست" : "Apply"}
-          </Link>
-        </nav>
+        <button
+          type="button"
+          className="menuToggle"
+          aria-expanded={menuOpen}
+          aria-controls="site-nav"
+          onClick={() => setMenuOpen((current) => !current)}
+        >
+          {menuOpen ? "Close" : "Menu"}
+        </button>
 
-        <div className="headerActions">
-          <SocialIcons />
-          <Link className="langToggle" href={otherLang}>
-            {isFa ? "EN" : "FA"}
-          </Link>
-          <Link className="btn btnPrimary" href={`${base}/apply`}>
-            {isFa ? "رزرو جلسهٔ استراتژیک" : "Book a Strategic Session"}
-          </Link>
-        </div>
+        <nav id="site-nav" className={`navShell${menuOpen ? " navShellOpen" : ""}`} aria-label="Main">
+          <div className="nav">
+            <Link className="navLink" href={englishBase} onClick={closeMenu}>
+              Home
+            </Link>
+            <Link
+              className="navLink"
+              href="https://donepage.co"
+              target="_blank"
+              rel="noreferrer"
+              onClick={closeMenu}
+            >
+              Donepage
+            </Link>
+            <Link className="navLink" href={`${englishBase}/lumi`} onClick={closeMenu}>
+              Lumi
+            </Link>
+            <Link className="navLink" href={`${englishBase}/work-with-me`} onClick={closeMenu}>
+              Work With Me
+            </Link>
+            <Link className="navLink" href={`${englishBase}/about`} onClick={closeMenu}>
+              About
+            </Link>
+            <Link className="navLink" href="/contact" onClick={closeMenu}>
+              Contact
+            </Link>
+          </div>
+
+          <div className="headerActions">
+            <Link className="langToggle" href={otherLang} onClick={closeMenu}>
+              {isFa ? "EN" : "FA"}
+            </Link>
+            <Link className="btn btnPrimary headerCta" href={`${englishBase}/work-with-me`} onClick={closeMenu}>
+              Work With Me
+            </Link>
+          </div>
+        </nav>
       </div>
     </header>
   );

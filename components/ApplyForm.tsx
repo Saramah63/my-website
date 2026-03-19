@@ -1,16 +1,20 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { SCHEDULING_URL } from "@/lib/siteConfig";
+import { EMAIL_ADDRESS, WHATSAPP_URL } from "@/lib/siteConfig";
 
 type ApplyPayload = {
   name: string;
   email: string;
   location: "Europe" | "Iran" | "Other";
-  primaryGoal: string;
+  currentSituation: string;
   biggestConstraint: string;
-  preferredFormat: "1:1" | "group";
-  budgetReadiness?: string;
+  triedSoFar: string;
+  desiredChange: string;
+  progressBlocker: string;
+  preferredFormat: "1:1" | "3-month";
+  investmentReadiness: string;
+  additionalContext?: string;
   companyWebsite?: string;
   lang?: "fa" | "en";
 };
@@ -19,41 +23,55 @@ type Labels = {
   name: string;
   email: string;
   location: string;
-  primaryGoal: string;
-  constraint: string;
-  format: string;
-  budget: string;
+  currentSituation: string;
+  biggestConstraint: string;
+  triedSoFar: string;
+  desiredChange: string;
+  progressBlocker: string;
+  preferredFormat: string;
+  investmentReadiness: string;
+  additionalContext: string;
   submit: string;
   submitting: string;
   success: string;
-  scheduling: string;
   direct: string;
+  validationError: string;
+  errorTitle: string;
+  errorHelp: string;
+  directEmail: string;
+  directWhatsapp: string;
   locationOptions: string[];
-  goalOptions: string[];
-  formatOptions: { value: "1:1" | "group"; label: string }[];
-  budgetOptions: string[];
+  formatOptions: { value: "1:1" | "3-month"; label: string }[];
+  readinessOptions: string[];
 };
 
 const DEFAULT_LABELS: Labels = {
   name: "Name",
   email: "Email",
   location: "Location",
-  primaryGoal: "Primary goal",
-  constraint: "Biggest constraint",
-  format: "Preferred format",
-  budget: "Budget readiness",
+  currentSituation: "What are you currently navigating?",
+  biggestConstraint: "What feels most unclear or stuck right now?",
+  triedSoFar: "What have you already tried to move forward?",
+  desiredChange: "What would a meaningful change look like for you in the next 1–3 months?",
+  progressBlocker: "What has been preventing progress so far?",
+  preferredFormat: "Preferred format",
+  investmentReadiness: "Are you open to investing in structured support if there is a good fit?",
+  additionalContext: "Anything else you'd like me to know (optional)",
   submit: "Submit application",
-  submitting: "Submitting...",
-  success: "Application received. If you want to book immediately, use the scheduling link below.",
-  scheduling: "Scheduling link",
-  direct: "Submitted successfully. We will respond within 2–3 business days.",
+  submitting: "Sending...",
+  success: "Your application has been received.",
+  direct: "I’ll review your responses and get back to you within 2–3 business days.",
+  validationError: "Please complete all required fields before submitting.",
+  errorTitle: "Something went wrong while sending your application.",
+  errorHelp: "If the issue continues, you can contact directly via email or WhatsApp.",
+  directEmail: "contact@saramahmodi.com",
+  directWhatsapp: "WhatsApp",
   locationOptions: ["Europe", "Iran", "Other"],
-  goalOptions: ["Migration readiness", "Career direction", "Identity + habits", "Entrepreneurship", "Other"],
   formatOptions: [
-    { value: "1:1", label: "1:1" },
-    { value: "group", label: "Group" },
+    { value: "1:1", label: "Strategic Session" },
+    { value: "3-month", label: "3-Month 1:1" },
   ],
-  budgetOptions: ["Request details", "< €1,000", "€1,000–€3,000", "€3,000–€7,000", "€7,000+"],
+  readinessOptions: ["Yes", "Not yet"],
 };
 
 export default function ApplyForm({
@@ -66,22 +84,38 @@ export default function ApplyForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [successDetail, setSuccessDetail] = useState("");
   const [form, setForm] = useState<ApplyPayload>({
     name: "",
     email: "",
     location: "Europe",
-    primaryGoal: "Migration readiness",
+    currentSituation: "",
     biggestConstraint: "",
+    triedSoFar: "",
+    desiredChange: "",
+    progressBlocker: "",
     preferredFormat: "1:1",
-    budgetReadiness: "",
+    investmentReadiness: "Yes",
+    additionalContext: "",
     companyWebsite: "",
     lang,
   });
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const formElement = e.currentTarget;
+    if (!formElement.checkValidity()) {
+      formElement.reportValidity();
+      setError(labels.validationError);
+      setSuccess(false);
+      setSuccessDetail("");
+      return;
+    }
+
     setLoading(true);
     setError("");
+    setSuccess(false);
+    setSuccessDetail("");
 
     try {
       const res = await fetch("/api/apply", {
@@ -92,40 +126,64 @@ export default function ApplyForm({
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data?.ok !== true) {
-        throw new Error("Submission failed");
+        const serverError =
+          typeof data?.error === "string" && data.error.trim()
+            ? data.error.trim()
+            : lang === "fa"
+              ? "ارسال با خطا مواجه شد. لطفاً دوباره تلاش کنید."
+              : "Submission failed. Please try again.";
+        console.error("Apply form submission failed", {
+          status: res.status,
+          response: data,
+          payload: {
+            ...form,
+            email: form.email ? "[redacted]" : "",
+          },
+        });
+        throw new Error(serverError);
       }
 
       setSuccess(true);
-    } catch {
-      setError(lang === "fa" ? "ارسال با خطا مواجه شد. لطفاً دوباره تلاش کنید." : "Submission failed. Please try again.");
+      setSuccessDetail(
+        typeof data?.message === "string" && data.message.trim() ? data.message.trim() : labels.direct
+      );
+    } catch (err) {
+      const message =
+        err instanceof Error && err.message
+          ? err.message
+          : lang === "fa"
+            ? "ارسال با خطا مواجه شد. لطفاً دوباره تلاش کنید."
+            : "Submission failed. Please try again.";
+      setError(message);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <form className="form" onSubmit={onSubmit}>
+    <form className="form" onSubmit={onSubmit} aria-busy={loading}>
+      {success ? (
+        <div className="formStatus formStatusSuccess" role="status" aria-live="polite">
+          <p className="formStatusTitle">✔ {labels.success}</p>
+          <p className="formStatusBody">{successDetail || labels.direct}</p>
+          <p className="formStatusBody">If needed, you can also contact directly:</p>
+          <div className="formStatusLinks">
+            <a href={`mailto:${EMAIL_ADDRESS}`}>{labels.directEmail}</a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+              {labels.directWhatsapp}
+            </a>
+          </div>
+        </div>
+      ) : null}
+
       <div className="field">
         <label className="label" htmlFor="name">{labels.name}</label>
-        <input
-          className="input"
-          id="name"
-          required
-          value={form.name}
-          onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
-        />
+        <input className="input" id="name" required value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} />
       </div>
 
       <div className="field">
         <label className="label" htmlFor="email">{labels.email}</label>
-        <input
-          className="input"
-          id="email"
-          type="email"
-          required
-          value={form.email}
-          onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
-        />
+        <input className="input" id="email" type="email" required value={form.email} onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))} />
       </div>
 
       <div className="field">
@@ -143,34 +201,41 @@ export default function ApplyForm({
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="primaryGoal">{labels.primaryGoal}</label>
-        <select
-          id="primaryGoal"
-          className="input"
-          value={form.primaryGoal}
-          onChange={(e) => setForm((p) => ({ ...p, primaryGoal: e.target.value }))}
-        >
-          {labels.goalOptions.map((opt) => (
-            <option key={opt}>{opt}</option>
-          ))}
-        </select>
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="constraint">{labels.constraint}</label>
+        <label className="label" htmlFor="currentSituation">{labels.currentSituation}</label>
         <textarea
           className="textarea"
-          id="constraint"
+          id="currentSituation"
           required
-          value={form.biggestConstraint}
-          onChange={(e) => setForm((p) => ({ ...p, biggestConstraint: e.target.value }))}
+          placeholder={lang === "fa" ? "مثلاً تغییر شغل، مهاجرت، شروع یا بازسازی کسب‌وکار" : "e.g. career change, migration, starting or restructuring a business"}
+          value={form.currentSituation}
+          onChange={(e) => setForm((p) => ({ ...p, currentSituation: e.target.value }))}
         />
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="format">{labels.format}</label>
+        <label className="label" htmlFor="biggestConstraint">{labels.biggestConstraint}</label>
+        <textarea className="textarea" id="biggestConstraint" required value={form.biggestConstraint} onChange={(e) => setForm((p) => ({ ...p, biggestConstraint: e.target.value }))} />
+      </div>
+
+      <div className="field">
+        <label className="label" htmlFor="triedSoFar">{labels.triedSoFar}</label>
+        <textarea className="textarea" id="triedSoFar" required value={form.triedSoFar} onChange={(e) => setForm((p) => ({ ...p, triedSoFar: e.target.value }))} />
+      </div>
+
+      <div className="field">
+        <label className="label" htmlFor="desiredChange">{labels.desiredChange}</label>
+        <textarea className="textarea" id="desiredChange" required value={form.desiredChange} onChange={(e) => setForm((p) => ({ ...p, desiredChange: e.target.value }))} />
+      </div>
+
+      <div className="field">
+        <label className="label" htmlFor="progressBlocker">{labels.progressBlocker}</label>
+        <textarea className="textarea" id="progressBlocker" required value={form.progressBlocker} onChange={(e) => setForm((p) => ({ ...p, progressBlocker: e.target.value }))} />
+      </div>
+
+      <div className="field">
+        <label className="label" htmlFor="preferredFormat">{labels.preferredFormat}</label>
         <select
-          id="format"
+          id="preferredFormat"
           className="input"
           value={form.preferredFormat}
           onChange={(e) => setForm((p) => ({ ...p, preferredFormat: e.target.value as ApplyPayload["preferredFormat"] }))}
@@ -182,17 +247,22 @@ export default function ApplyForm({
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="budget">{labels.budget}</label>
+        <label className="label" htmlFor="investmentReadiness">{labels.investmentReadiness}</label>
         <select
-          id="budget"
+          id="investmentReadiness"
           className="input"
-          value={form.budgetReadiness}
-          onChange={(e) => setForm((p) => ({ ...p, budgetReadiness: e.target.value }))}
+          value={form.investmentReadiness}
+          onChange={(e) => setForm((p) => ({ ...p, investmentReadiness: e.target.value }))}
         >
-          {labels.budgetOptions.map((opt) => (
+          {labels.readinessOptions.map((opt) => (
             <option key={opt}>{opt}</option>
           ))}
         </select>
+      </div>
+
+      <div className="field">
+        <label className="label" htmlFor="additionalContext">{labels.additionalContext}</label>
+        <textarea className="textarea" id="additionalContext" value={form.additionalContext} onChange={(e) => setForm((p) => ({ ...p, additionalContext: e.target.value }))} />
       </div>
 
       <div className="field" style={{ display: "none" }} aria-hidden="true">
@@ -207,22 +277,30 @@ export default function ApplyForm({
         />
       </div>
 
-      {error ? <p className="note err">{error}</p> : null}
-      {success ? (
-        <p className="note ok">
-          {labels.success}
-        </p>
-      ) : null}
-
       <button className="btn btnPrimary" type="submit" disabled={loading}>
-        {loading ? labels.submitting : labels.submit}
+        {loading ? (
+          <span className="btnInlineStatus">
+            <span className="btnSpinner" aria-hidden="true" />
+            <span>{labels.submitting}</span>
+          </span>
+        ) : (
+          labels.submit
+        )}
       </button>
 
-      <a className="btn" href={SCHEDULING_URL || "#"} target="_blank" rel="noopener noreferrer">
-        {labels.scheduling}
-      </a>
-
-      {success ? <p className="small">{labels.direct}</p> : null}
+      {error ? (
+        <div className="formStatus formStatusError" role="alert">
+          <p className="formStatusTitle">⚠ {labels.errorTitle}</p>
+          <p className="formStatusBody">{error}</p>
+          <p className="formStatusBody">{labels.errorHelp}</p>
+          <div className="formStatusLinks">
+            <a href={`mailto:${EMAIL_ADDRESS}`}>{labels.directEmail}</a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+              {labels.directWhatsapp}
+            </a>
+          </div>
+        </div>
+      ) : null}
     </form>
   );
 }

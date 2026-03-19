@@ -8,7 +8,9 @@ export const LINKEDIN_URL =
   process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://www.linkedin.com/in/saramahmodi/";
 export const INSTAGRAM_URL =
   process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com/mindshift_for_lifeshift/";
-export const EMAIL_ADDRESS = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@saramahmodi.com";
+export const EMAIL_ADDRESS = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "saramah63@gmail.com";
+export const EMAIL_MAILTO_URL =
+  process.env.NEXT_PUBLIC_CONTACT_MAILTO || `mailto:${EMAIL_ADDRESS}?subject=Inquiry%20from%20website`;
 export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "358417539326";
 export const WHATSAPP_MESSAGE =
   process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE || "سلام، برای همکاری با شما پیام می‌دهم.";

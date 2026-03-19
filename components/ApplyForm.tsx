@@ -1,21 +1,20 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { EMAIL_ADDRESS, WHATSAPP_URL } from "@/lib/siteConfig";
+import { EMAIL_ADDRESS, EMAIL_MAILTO_URL, WHATSAPP_URL } from "@/lib/siteConfig";
 
 type ApplyPayload = {
   name: string;
   email: string;
   location: "Europe" | "Iran" | "Other";
-  currentSituation: string;
-  biggestConstraint: string;
-  triedSoFar: string;
-  desiredChange: string;
-  progressBlocker: string;
-  preferredFormat: "1:1" | "3-month";
+  situation: string;
+  unclear: string;
+  tried: string;
+  changeGoal: string;
+  blockers: string;
+  preferredFormat: "Strategic Session" | "3-Month 1:1";
   investmentReadiness: string;
-  additionalContext?: string;
-  companyWebsite?: string;
+  extraContext?: string;
   lang?: "fa" | "en";
 };
 
@@ -23,14 +22,14 @@ type Labels = {
   name: string;
   email: string;
   location: string;
-  currentSituation: string;
-  biggestConstraint: string;
-  triedSoFar: string;
-  desiredChange: string;
-  progressBlocker: string;
+  situation: string;
+  unclear: string;
+  tried: string;
+  changeGoal: string;
+  blockers: string;
   preferredFormat: string;
   investmentReadiness: string;
-  additionalContext: string;
+  extraContext: string;
   submit: string;
   submitting: string;
   success: string;
@@ -41,7 +40,7 @@ type Labels = {
   directEmail: string;
   directWhatsapp: string;
   locationOptions: string[];
-  formatOptions: { value: "1:1" | "3-month"; label: string }[];
+  formatOptions: { value: "Strategic Session" | "3-Month 1:1"; label: string }[];
   readinessOptions: string[];
 };
 
@@ -49,27 +48,27 @@ const DEFAULT_LABELS: Labels = {
   name: "Name",
   email: "Email",
   location: "Location",
-  currentSituation: "What are you currently navigating?",
-  biggestConstraint: "What feels most unclear or stuck right now?",
-  triedSoFar: "What have you already tried to move forward?",
-  desiredChange: "What would a meaningful change look like for you in the next 1–3 months?",
-  progressBlocker: "What has been preventing progress so far?",
+  situation: "What are you currently navigating?",
+  unclear: "What feels most unclear or stuck right now?",
+  tried: "What have you already tried to move forward?",
+  changeGoal: "What would a meaningful change look like for you in the next 1–3 months?",
+  blockers: "What has been preventing progress so far?",
   preferredFormat: "Preferred format",
   investmentReadiness: "Are you open to investing in structured support if there is a good fit?",
-  additionalContext: "Anything else you'd like me to know (optional)",
+  extraContext: "Anything else you'd like me to know (optional)",
   submit: "Submit application",
   submitting: "Sending...",
   success: "Your application has been received.",
   direct: "I’ll review your responses and get back to you within 2–3 business days.",
   validationError: "Please complete all required fields before submitting.",
-  errorTitle: "Something went wrong while sending your application.",
-  errorHelp: "If the issue continues, you can contact directly via email or WhatsApp.",
-  directEmail: "contact@saramahmodi.com",
+  errorTitle: "Something went wrong while sending your application. Please try again.",
+  errorHelp: `If the issue continues, contact directly at ${EMAIL_ADDRESS}.`,
+  directEmail: EMAIL_ADDRESS,
   directWhatsapp: "WhatsApp",
   locationOptions: ["Europe", "Iran", "Other"],
   formatOptions: [
-    { value: "1:1", label: "Strategic Session" },
-    { value: "3-month", label: "3-Month 1:1" },
+    { value: "Strategic Session", label: "Strategic Session" },
+    { value: "3-Month 1:1", label: "3-Month 1:1" },
   ],
   readinessOptions: ["Yes", "Not yet"],
 };
@@ -89,15 +88,14 @@ export default function ApplyForm({
     name: "",
     email: "",
     location: "Europe",
-    currentSituation: "",
-    biggestConstraint: "",
-    triedSoFar: "",
-    desiredChange: "",
-    progressBlocker: "",
-    preferredFormat: "1:1",
+    situation: "",
+    unclear: "",
+    tried: "",
+    changeGoal: "",
+    blockers: "",
+    preferredFormat: "Strategic Session",
     investmentReadiness: "Yes",
-    additionalContext: "",
-    companyWebsite: "",
+    extraContext: "",
     lang,
   });
 
@@ -117,43 +115,68 @@ export default function ApplyForm({
     setSuccess(false);
     setSuccessDetail("");
 
+    const payload = { ...form, lang };
+
     try {
       const res = await fetch("/api/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, lang }),
+        body: JSON.stringify(payload),
       });
 
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || data?.ok !== true) {
-        const serverError =
-          typeof data?.error === "string" && data.error.trim()
-            ? data.error.trim()
-            : lang === "fa"
-              ? "ارسال با خطا مواجه شد. لطفاً دوباره تلاش کنید."
-              : "Submission failed. Please try again.";
+      const rawText = await res.text();
+      let data: Record<string, unknown> | null = null;
+
+      try {
+        data = rawText ? (JSON.parse(rawText) as Record<string, unknown>) : null;
+      } catch {
+        data = rawText ? { rawText } : null;
+      }
+
+      if (!res.ok) {
         console.error("Apply form submission failed", {
           status: res.status,
+          statusText: res.statusText,
           response: data,
           payload: {
-            ...form,
+            ...payload,
             email: form.email ? "[redacted]" : "",
           },
         });
-        throw new Error(serverError);
+
+        setError(
+          typeof data?.error === "string" && data.error.trim()
+            ? data.error.trim()
+            : "Something went wrong while sending your application. Please try again. If the issue continues, contact directly at saramah63@gmail.com."
+        );
+        return;
       }
 
+      console.log("Apply form success", data);
       setSuccess(true);
       setSuccessDetail(
         typeof data?.message === "string" && data.message.trim() ? data.message.trim() : labels.direct
       );
+      setForm({
+        name: "",
+        email: "",
+        location: "Europe",
+        situation: "",
+        unclear: "",
+        tried: "",
+        changeGoal: "",
+        blockers: "",
+        preferredFormat: "Strategic Session",
+        investmentReadiness: "Yes",
+        extraContext: "",
+        lang,
+      });
     } catch (err) {
+      console.error("Apply form network/runtime error", err);
       const message =
         err instanceof Error && err.message
           ? err.message
-          : lang === "fa"
-            ? "ارسال با خطا مواجه شد. لطفاً دوباره تلاش کنید."
-            : "Submission failed. Please try again.";
+          : "Something went wrong while sending your application. Please try again. If the issue continues, contact directly at saramah63@gmail.com.";
       setError(message);
     } finally {
       setLoading(false);
@@ -168,7 +191,7 @@ export default function ApplyForm({
           <p className="formStatusBody">{successDetail || labels.direct}</p>
           <p className="formStatusBody">If needed, you can also contact directly:</p>
           <div className="formStatusLinks">
-            <a href={`mailto:${EMAIL_ADDRESS}`}>{labels.directEmail}</a>
+            <a href={EMAIL_MAILTO_URL}>{labels.directEmail}</a>
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
               {labels.directWhatsapp}
             </a>
@@ -201,35 +224,35 @@ export default function ApplyForm({
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="currentSituation">{labels.currentSituation}</label>
+        <label className="label" htmlFor="situation">{labels.situation}</label>
         <textarea
           className="textarea"
-          id="currentSituation"
+          id="situation"
           required
           placeholder={lang === "fa" ? "مثلاً تغییر شغل، مهاجرت، شروع یا بازسازی کسب‌وکار" : "e.g. career change, migration, starting or restructuring a business"}
-          value={form.currentSituation}
-          onChange={(e) => setForm((p) => ({ ...p, currentSituation: e.target.value }))}
+          value={form.situation}
+          onChange={(e) => setForm((p) => ({ ...p, situation: e.target.value }))}
         />
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="biggestConstraint">{labels.biggestConstraint}</label>
-        <textarea className="textarea" id="biggestConstraint" required value={form.biggestConstraint} onChange={(e) => setForm((p) => ({ ...p, biggestConstraint: e.target.value }))} />
+        <label className="label" htmlFor="unclear">{labels.unclear}</label>
+        <textarea className="textarea" id="unclear" required value={form.unclear} onChange={(e) => setForm((p) => ({ ...p, unclear: e.target.value }))} />
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="triedSoFar">{labels.triedSoFar}</label>
-        <textarea className="textarea" id="triedSoFar" required value={form.triedSoFar} onChange={(e) => setForm((p) => ({ ...p, triedSoFar: e.target.value }))} />
+        <label className="label" htmlFor="tried">{labels.tried}</label>
+        <textarea className="textarea" id="tried" required value={form.tried} onChange={(e) => setForm((p) => ({ ...p, tried: e.target.value }))} />
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="desiredChange">{labels.desiredChange}</label>
-        <textarea className="textarea" id="desiredChange" required value={form.desiredChange} onChange={(e) => setForm((p) => ({ ...p, desiredChange: e.target.value }))} />
+        <label className="label" htmlFor="changeGoal">{labels.changeGoal}</label>
+        <textarea className="textarea" id="changeGoal" required value={form.changeGoal} onChange={(e) => setForm((p) => ({ ...p, changeGoal: e.target.value }))} />
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="progressBlocker">{labels.progressBlocker}</label>
-        <textarea className="textarea" id="progressBlocker" required value={form.progressBlocker} onChange={(e) => setForm((p) => ({ ...p, progressBlocker: e.target.value }))} />
+        <label className="label" htmlFor="blockers">{labels.blockers}</label>
+        <textarea className="textarea" id="blockers" required value={form.blockers} onChange={(e) => setForm((p) => ({ ...p, blockers: e.target.value }))} />
       </div>
 
       <div className="field">
@@ -261,20 +284,8 @@ export default function ApplyForm({
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="additionalContext">{labels.additionalContext}</label>
-        <textarea className="textarea" id="additionalContext" value={form.additionalContext} onChange={(e) => setForm((p) => ({ ...p, additionalContext: e.target.value }))} />
-      </div>
-
-      <div className="field" style={{ display: "none" }} aria-hidden="true">
-        <label className="label" htmlFor="companyWebsite">Website</label>
-        <input
-          className="input"
-          id="companyWebsite"
-          value={form.companyWebsite}
-          onChange={(e) => setForm((p) => ({ ...p, companyWebsite: e.target.value }))}
-          tabIndex={-1}
-          autoComplete="off"
-        />
+        <label className="label" htmlFor="extraContext">{labels.extraContext}</label>
+        <textarea className="textarea" id="extraContext" value={form.extraContext} onChange={(e) => setForm((p) => ({ ...p, extraContext: e.target.value }))} />
       </div>
 
       <button className="btn btnPrimary" type="submit" disabled={loading}>
@@ -294,7 +305,7 @@ export default function ApplyForm({
           <p className="formStatusBody">{error}</p>
           <p className="formStatusBody">{labels.errorHelp}</p>
           <div className="formStatusLinks">
-            <a href={`mailto:${EMAIL_ADDRESS}`}>{labels.directEmail}</a>
+            <a href={EMAIL_MAILTO_URL}>{labels.directEmail}</a>
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
               {labels.directWhatsapp}
             </a>

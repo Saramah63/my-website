@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { WHATSAPP_URL } from "@/lib/siteConfig";
+import { EMAIL_ADDRESS, EMAIL_MAILTO_URL, WHATSAPP_URL } from "@/lib/siteConfig";
 import TypingHeroHeadline from "@/components/TypingHeroHeadline";
 
 export const metadata: Metadata = {
@@ -281,6 +281,9 @@ function PersianPage() {
                 ارتباط در واتساپ
               </a>
             </div>
+            <p className="founderSupportLine">
+              برای ارتباط مستقیم: <a href={EMAIL_MAILTO_URL}>{EMAIL_ADDRESS}</a>
+            </p>
           </div>
         </div>
       </section>

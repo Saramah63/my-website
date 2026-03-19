@@ -1,13 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { INSTAGRAM_URL, LINKEDIN_URL } from "@/lib/siteConfig";
+import { EMAIL_ADDRESS, EMAIL_MAILTO_URL, INSTAGRAM_URL, LINKEDIN_URL } from "@/lib/siteConfig";
 
 export default function Footer() {
   const englishBase = "/en";
-  const emailUser = "contact";
-  const emailDomain = "saramahmodi.com";
-  const emailAddress = `${emailUser}@${emailDomain}`;
   return (
     <footer className="footer">
       <div className="container footerInner">
@@ -16,8 +13,9 @@ export default function Footer() {
           <div className="small">
             Product-focused designer, founder, and strategic builder.
           </div>
+          <div className="small footerDirectLabel">For direct contact:</div>
           <div className="footerContact">
-            <a href={`mailto:${emailAddress}`}>{emailAddress}</a>
+            <a href={EMAIL_MAILTO_URL}>{EMAIL_ADDRESS}</a>
           </div>
         </div>
 

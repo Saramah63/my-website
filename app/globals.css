@@ -1033,6 +1033,9 @@ p{ margin: 0; font-size: 16px; line-height: 1.7; }
   font-size: 13px;
   color: var(--muted);
 }
+.footerDirectLabel{
+  margin-top: 12px;
+}
 .footerLink:hover{
   background: #FFFFFF;
   color: var(--ink);

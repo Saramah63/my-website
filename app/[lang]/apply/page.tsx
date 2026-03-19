@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ApplyForm from "@/components/ApplyForm";
-import { reviewWindowText, APPLICATION_REVIEW_DAYS, WHATSAPP_URL } from "@/lib/siteConfig";
+import { EMAIL_ADDRESS, EMAIL_MAILTO_URL, reviewWindowText, APPLICATION_REVIEW_DAYS, WHATSAPP_URL } from "@/lib/siteConfig";
 
 export const metadata: Metadata = {
   title: "Apply | Sara Mahmodi",
@@ -44,27 +44,27 @@ export default async function ApplyPage({ params }: { params: Promise<{ lang: st
                     name: "نام",
                     email: "ایمیل",
                     location: "موقعیت",
-                    currentSituation: "اکنون در حال مواجهه با چه وضعیتی هستید؟",
-                    biggestConstraint: "در حال حاضر چه چیزی برای شما مبهم یا گیرکرده است؟",
-                    triedSoFar: "تا الان برای جلو رفتن چه کارهایی انجام داده‌اید؟",
-                    desiredChange: "یک تغییر معنادار برای شما در ۱ تا ۳ ماه آینده چه شکلی خواهد بود؟",
-                    progressBlocker: "چه چیزی تا الان جلوی پیشرفت را گرفته است؟",
+                    situation: "اکنون در حال مواجهه با چه وضعیتی هستید؟",
+                    unclear: "در حال حاضر چه چیزی برای شما مبهم یا گیرکرده است؟",
+                    tried: "تا الان برای جلو رفتن چه کارهایی انجام داده‌اید؟",
+                    changeGoal: "یک تغییر معنادار برای شما در ۱ تا ۳ ماه آینده چه شکلی خواهد بود؟",
+                    blockers: "چه چیزی تا الان جلوی پیشرفت را گرفته است؟",
                     preferredFormat: "فرمت ترجیحی",
                     investmentReadiness: "اگر تناسب خوبی وجود داشته باشد، آیا برای سرمایه‌گذاری روی حمایت ساختارمند باز هستید؟",
-                    additionalContext: "توضیحات تکمیلی (اختیاری)",
+                    extraContext: "توضیحات تکمیلی (اختیاری)",
                     submit: "ارسال درخواست",
                     submitting: "در حال ارسال...",
                     success: "درخواست شما دریافت شد.",
                     direct: "پاسخ‌های شما بررسی می‌شود و طی ۲ تا ۳ روز کاری با شما در ارتباط خواهم بود.",
                     validationError: "لطفاً قبل از ارسال، همه فیلدهای ضروری را تکمیل کنید.",
-                    errorTitle: "هنگام ارسال درخواست مشکلی پیش آمد.",
-                    errorHelp: "اگر مشکل ادامه داشت، می‌توانید از طریق ایمیل یا واتساپ مستقیم در ارتباط باشید.",
-                    directEmail: "contact@saramahmodi.com",
+                    errorTitle: "هنگام ارسال درخواست مشکلی پیش آمد. لطفاً دوباره تلاش کنید.",
+                    errorHelp: `اگر مشکل ادامه داشت، می‌توانید مستقیم از طریق ${EMAIL_ADDRESS} یا واتساپ در ارتباط باشید.`,
+                    directEmail: EMAIL_ADDRESS,
                     directWhatsapp: "واتساپ",
                     locationOptions: ["اروپا", "ایران", "سایر"],
                     formatOptions: [
-                      { value: "1:1", label: "Strategic Session" },
-                      { value: "3-month", label: "3-Month 1:1" },
+                      { value: "Strategic Session", label: "Strategic Session" },
+                      { value: "3-Month 1:1", label: "3-Month 1:1" },
                     ],
                     readinessOptions: ["بله", "هنوز نه"],
                   }
@@ -83,6 +83,14 @@ export default async function ApplyPage({ params }: { params: Promise<{ lang: st
           </p>
           <p className="small" style={{ marginTop: 18 }}>
             {isFa ? "اگر ترجیح می‌دهید سریع‌تر در ارتباط باشید:" : "If you prefer to connect more quickly:"}
+          </p>
+          <p className="small">
+            {isFa
+              ? "اگر فرم ارسال نشد، می‌توانید مستقیم از طریق ایمیل با من در ارتباط باشید:"
+              : "If the form does not go through, you can contact directly at:"}
+          </p>
+          <p className="small">
+            <a href={EMAIL_MAILTO_URL}>{EMAIL_ADDRESS}</a>
           </p>
           <p className="small">
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import TypingHeroHeadline from "@/components/TypingHeroHeadline";
 import EmailContactActions from "@/components/EmailContactActions";
 import { WHATSAPP_URL } from "@/lib/siteConfig";
-import TypingHeroHeadline from "@/components/TypingHeroHeadline";
 
 export const metadata: Metadata = {
   title: "Sara Mahmodi | Product-Focused Designer, Founder, and Strategic Builder",
@@ -16,28 +16,43 @@ export const metadata: Metadata = {
   },
 };
 
-const buildItems = [
+const selectedWorkItems = [
   {
     name: "Donepage",
-    label: "Commercial product",
-    description: "Conversion-focused landing pages for service businesses.",
-    href: "https://donepage.co",
-    cta: "Go to Donepage",
+    label: "Business product",
+    description:
+      "Conversion-focused landing pages that turn unclear offers into structured, high-conversion pages.",
+    href: "/en/projects/donepage",
   },
   {
     name: "Lumi",
     label: "Innovation product",
-    description: "An early-stage emotional learning product for children.",
-    href: "/en/lumi",
-    cta: "Explore Lumi",
+    description:
+      "An early-stage emotional learning product for children, designed for real-world environments.",
+    href: "/en/projects/lumi",
   },
   {
-    name: "Strategic Work",
-    label: "Selective service",
-    description: "Structured support for people navigating decisions and transitions.",
-    href: "/en/work-with-me",
-    cta: "Apply to work with me",
+    name: "FamSync",
+    label: "Product exploration",
+    description:
+      "A product exploration focused on simplifying family coordination and shared systems.",
+    href: "/en/projects/famsync",
   },
+];
+
+const productThinkingItems = [
+  "I define real user problems before designing solutions",
+  "I prioritize clarity over feature complexity",
+  "I focus on execution, not just ideas",
+  "I iterate based on feedback, not assumptions",
+  "I design systems, not just screens",
+];
+
+const currentWorkItems = [
+  "product direction",
+  "UX and interaction design",
+  "early validation",
+  "iterative development",
 ];
 
 function PersianPage() {
@@ -315,112 +330,94 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <section className="founderHero">
         <div className="container founderHeroShell">
           <div className="founderHeroCopy">
-            <p className="founderKicker">Sara Mahmodi</p>
             <TypingHeroHeadline />
             <p className="founderLead">
-              Founder of Donepage and Lumi. Product-focused designer working across digital services and
-              real-world impact.
+              Product-focused designer and founder of Donepage and Lumi. I design, test, and iterate real
+              products with a focus on clarity, execution, and real-world outcomes.
             </p>
             <div className="founderHeroActions">
-              <a className="btn btnPrimary founderButton" href="https://donepage.co" target="_blank" rel="noreferrer">
-                Explore Donepage
-              </a>
-              <Link className="btn founderButton founderButtonGhost" href="/en/lumi">
-                Explore Lumi
+              <Link className="btn btnPrimary founderButton" href="/en/projects">
+                View my work
               </Link>
-              <Link className="btn founderButton founderButtonGhost" href="/en/work-with-me">
-                Work With Me
+              <Link className="btn founderButton founderButtonGhost" href="/contact">
+                Open to Product / UX roles
               </Link>
             </div>
-            <p className="founderSupportLine">Also open to selected Product / UX opportunities.</p>
           </div>
         </div>
       </section>
 
-      <section id="what-i-build" className="founderSection">
+      <section id="selected-work" className="founderSection">
         <div className="container founderSectionShell">
           <div className="founderSectionHeading">
-            <p className="founderKicker">What I Build</p>
-            <h2 className="founderHeading">Three focused areas of work.</h2>
+            <p className="founderKicker">Selected Work</p>
+            <h2 className="founderHeading">Selected Work</h2>
           </div>
           <div className="founderBuildGrid">
-            {buildItems.map((item) => {
-              const content = (
-                <>
+            {selectedWorkItems.map((item, index) => (
+                <Link
+                  key={item.name}
+                  className="founderPanel founderBuildCard founderAnimatedItem"
+                  href={item.href}
+                  style={{ animationDelay: `${index * 120}ms` }}
+                >
                   <div className="founderBuildTop">
-                    <p className="founderCardLabel">{item.label}</p>
                     <h3 className="founderCardTitle">{item.name}</h3>
                   </div>
                   <p className="founderBody">{item.description}</p>
-                  <span className="founderInlineLink">{item.cta}</span>
-                </>
-              );
-
-              if (item.href.startsWith("http")) {
-                return (
-                  <a
-                    key={item.name}
-                    className="founderPanel founderBuildCard"
-                    href={item.href}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {content}
-                  </a>
-                );
-              }
-
-              return (
-                <Link key={item.name} className="founderPanel founderBuildCard" href={item.href}>
-                  {content}
+                  <span className="founderInlineLink">View case study</span>
                 </Link>
-              );
-            })}
+            ))}
+          </div>
+          <div className="founderHeroActions">
+            <Link className="btn btnPrimary founderButton" href="/en/projects">
+              Explore projects
+            </Link>
           </div>
         </div>
       </section>
 
-      <section id="about" className="founderSection founderSectionAlt">
-        <div className="container founderSplit">
-          <div>
-            <p className="founderKicker">About</p>
-            <h2 className="founderHeading">A product-driven approach to practical, usable work.</h2>
-          </div>
-          <div className="founderReadable">
-            <p className="founderBody">
-              I design and build digital products with a focus on clarity, usability, and real-world application.
-            </p>
-            <p className="founderBody">
-              My work combines product thinking, user experience, and structured execution to turn ideas into
-              practical, usable systems.
-            </p>
-            <p className="founderBody">
-              Currently building:
-              <br />
-              Donepage - a landing page system for service businesses
-              <br />
-              Lumi - an early-stage emotional learning product for children
-            </p>
-            <p className="founderBody">
-              Alongside this, I work selectively with individuals on clarity, direction, and structured
-              progress.
-            </p>
-            <p className="founderBody">
-              I am also growing toward Product Owner roles, with hands-on experience in building and
-              testing real products.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="roles" className="founderSection founderSectionAlt founderSectionLast">
+      <section className="founderSection founderSectionAlt">
         <div className="container founderFeature">
           <div className="founderFeatureIntro">
-            <p className="founderKicker">Open To Roles</p>
-            <h2 className="founderHeading">Open to selected Product and UX opportunities.</h2>
-            <p className="founderBody">
-              Bringing hands-on experience in building, testing, and iterating real products.
-            </p>
+            <p className="founderKicker">Product Thinking</p>
+            <h2 className="founderHeading">How I think as a product builder</h2>
+          </div>
+          <div className="founderPanel founderQuietCard">
+            <div className="founderList">
+              {productThinkingItems.map((item, index) => (
+                <div
+                  key={item}
+                  className="founderListItem founderAnimatedItem founderAnimatedLine"
+                  style={{ animationDelay: `${index * 80}ms` }}
+                >
+                  <span className="founderListMark" aria-hidden="true" />
+                  <p className="founderBody">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="founderSection founderSectionAlt">
+        <div className="container founderSplit">
+          <div>
+            <p className="founderKicker">Current Work</p>
+            <h2 className="founderHeading">
+              Currently building and refining early-stage products through real use, feedback, and
+              iteration.
+            </h2>
+          </div>
+          <div className="founderReadable founderReadableNarrow">
+            <div className="founderList">
+              {currentWorkItems.map((item) => (
+                <div key={item} className="founderListItem">
+                  <span className="founderListMark" aria-hidden="true" />
+                  <p className="founderBody">{item}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -428,13 +425,18 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <section className="founderSection founderSectionAlt founderSectionLast">
         <div className="container founderSplit">
           <div>
-            <p className="founderKicker">Footer CTA</p>
-            <h2 className="founderHeading">For collaboration, product work, or inquiries.</h2>
+            <p className="founderKicker">Final CTA</p>
+            <h2 className="founderHeading">
+              If you&apos;re building products that require clarity, structure, and execution:
+            </h2>
           </div>
           <div className="founderReadable founderReadableNarrow">
             <div className="founderHeroActions">
-              <Link className="btn btnPrimary founderButton" href="/contact">
-                Contact
+              <Link className="btn btnPrimary founderButton" href="/en/work-with-me">
+                Let&apos;s work together
+              </Link>
+              <Link className="btn founderButton founderButtonGhost" href="/en/projects">
+                View my work
               </Link>
             </div>
           </div>

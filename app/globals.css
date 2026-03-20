@@ -391,6 +391,10 @@ p{ margin: 0; font-size: 16px; line-height: 1.7; }
   font-weight: 600;
 }
 
+.founderDisplayWide{
+  max-width: 15ch;
+}
+
 .srOnly{
   position: absolute;
   width: 1px;
@@ -407,7 +411,7 @@ p{ margin: 0; font-size: 16px; line-height: 1.7; }
   max-width: none;
   display: inline-flex;
   flex-direction: column;
-  gap: 0.04em;
+  gap: 0.1em;
 }
 
 .founderTypingIntro{
@@ -447,6 +451,11 @@ p{ margin: 0; font-size: 16px; line-height: 1.7; }
   animation: founder-caret 1s ease-in-out infinite;
 }
 
+.founderTypingOutro{
+  display: block;
+  max-width: 14ch;
+}
+
 @keyframes founder-caret{
   0%, 48% { opacity: 1; }
   52%, 100% { opacity: 0.18; }
@@ -462,6 +471,15 @@ p{ margin: 0; font-size: 16px; line-height: 1.7; }
   font-size: clamp(28px, 3vw, 30px);
   line-height: 1.24;
   font-weight: 600;
+}
+
+.founderCaseStudyShell{
+  max-width: 760px;
+  gap: 20px;
+}
+
+.founderCaseStudyCard{
+  padding: 24px;
 }
 
 .founderLead{
@@ -552,15 +570,15 @@ p{ margin: 0; font-size: 16px; line-height: 1.7; }
 }
 
 .founderSection{
-  padding: 32px 0;
+  padding: 44px 0;
 }
 
 .founderSectionAlt{
-  padding-top: 32px;
+  padding-top: 44px;
 }
 
 .founderSectionLast{
-  padding-bottom: 64px;
+  padding-bottom: 80px;
 }
 
 .founderSectionShell{
@@ -593,7 +611,7 @@ p{ margin: 0; font-size: 16px; line-height: 1.7; }
 .founderBuildCard:hover,
 .founderNowCard:hover,
 .founderFeatureCard:hover{
-  transform: scale(1.02);
+  transform: translateY(-2px);
   box-shadow: var(--shadow);
   border-color: #D1D5DB;
 }
@@ -695,6 +713,16 @@ p{ margin: 0; font-size: 16px; line-height: 1.7; }
   grid-template-columns: 12px minmax(0, 1fr);
   gap: 12px;
   align-items: start;
+}
+
+.founderAnimatedItem{
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fadeUp .6s ease forwards;
+}
+
+.founderAnimatedLine{
+  animation-duration: .5s;
 }
 
 .founderListMark{

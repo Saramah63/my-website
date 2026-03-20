@@ -73,6 +73,9 @@ export default function TypingHeroHeadline() {
           <span className="founderTypingCursor" />
         </span>
       </span>
+      <span className="founderTypingOutro" aria-hidden="true">
+        that turn complexity into usable systems.
+      </span>
     </h1>
   );
 }

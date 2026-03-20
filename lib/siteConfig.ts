@@ -9,12 +9,17 @@ export const LINKEDIN_URL =
 export const INSTAGRAM_URL =
   process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com/mindshift_for_lifeshift/";
 export const EMAIL_ADDRESS = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "saramah63@gmail.com";
-export const EMAIL_MAILTO_URL =
-  process.env.NEXT_PUBLIC_CONTACT_MAILTO || `mailto:${EMAIL_ADDRESS}?subject=Inquiry%20from%20website`;
+export const EMAIL_GMAIL_URL =
+  process.env.NEXT_PUBLIC_CONTACT_GMAIL_URL ||
+  `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL_ADDRESS}&su=Website%20Inquiry`;
 export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "358417539326";
-export const WHATSAPP_MESSAGE =
-  process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE || "سلام، برای همکاری با شما پیام می‌دهم.";
-export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+export const WHATSAPP_EN_URL =
+  process.env.NEXT_PUBLIC_WHATSAPP_EN_URL ||
+  `https://wa.me/${WHATSAPP_NUMBER}?text=Hello,%20I%20would%20like%20to%20get%20in%20touch.`;
+export const WHATSAPP_FA_URL =
+  process.env.NEXT_PUBLIC_WHATSAPP_FA_URL ||
+  `https://wa.me/${WHATSAPP_NUMBER}?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D9%87%D9%85%DA%A9%D8%A7%D8%B1%DB%8C%20%D8%A8%D8%A7%20%D8%B4%D9%85%D8%A7%20%D9%BE%DB%8C%D8%A7%D9%85%20%D9%85%DB%8C%E2%80%8C%D8%AF%D9%87%D9%85.`;
+export const WHATSAPP_URL = WHATSAPP_FA_URL;
 
 export const EMAIL_USER = process.env.EMAIL_USER || "";
 export const EMAIL_PASS = process.env.EMAIL_PASS || "";

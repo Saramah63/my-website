@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { EMAIL_ADDRESS, EMAIL_MAILTO_URL, WHATSAPP_URL } from "@/lib/siteConfig";
+import EmailContactActions from "@/components/EmailContactActions";
+import { WHATSAPP_URL } from "@/lib/siteConfig";
 
 export const metadata: Metadata = {
   title: "Work With Me | Sara Mahmodi",
@@ -298,9 +299,11 @@ export default async function WorkWithMePage({ params }: { params: Promise<{ lan
                 WhatsApp
               </a>
             </div>
-            <p className="founderSupportLine">
-              If you prefer direct contact, email: <a href={EMAIL_MAILTO_URL}>{EMAIL_ADDRESS}</a>
-            </p>
+            <EmailContactActions
+              lang="en"
+              prefix="For faster first contact:"
+              className="founderSupportLine emailContactInline"
+            />
           </div>
         </div>
       </section>

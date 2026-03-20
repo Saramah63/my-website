@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { EMAIL_ADDRESS, EMAIL_MAILTO_URL, INSTAGRAM_URL, LINKEDIN_URL } from "@/lib/siteConfig";
+import EmailContactActions from "@/components/EmailContactActions";
+import { INSTAGRAM_URL, LINKEDIN_URL } from "@/lib/siteConfig";
 
 export default function Footer() {
   const englishBase = "/en";
@@ -13,10 +14,8 @@ export default function Footer() {
           <div className="small">
             Product-focused designer, founder, and strategic builder.
           </div>
-          <div className="small footerDirectLabel">For direct contact:</div>
-          <div className="footerContact">
-            <a href={EMAIL_MAILTO_URL}>{EMAIL_ADDRESS}</a>
-          </div>
+          <div className="small footerDirectLabel">Contact</div>
+          <EmailContactActions lang="en" className="footerEmailActions" />
         </div>
 
         <div className="footerLinks">

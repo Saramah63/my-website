@@ -1,24 +1,14 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { EMAIL_ADDRESS, EMAIL_MAILTO_URL, WHATSAPP_URL } from "@/lib/siteConfig";
+import { useState } from "react";
+import {
+  EMAIL_ADDRESS,
+  EMAIL_GMAIL_URL,
+  WHATSAPP_EN_URL,
+  WHATSAPP_FA_URL,
+} from "@/lib/siteConfig";
 
-type ApplyPayload = {
-  name: string;
-  email: string;
-  location: "Europe" | "Iran" | "Other";
-  situation: string;
-  unclear: string;
-  tried: string;
-  changeGoal: string;
-  blockers: string;
-  preferredFormat: "Strategic Session" | "3-Month 1:1";
-  investmentReadiness: string;
-  extraContext?: string;
-  lang?: "fa" | "en";
-};
-
-type Labels = {
+type FormState = {
   name: string;
   email: string;
   location: string;
@@ -30,107 +20,122 @@ type Labels = {
   preferredFormat: string;
   investmentReadiness: string;
   extraContext: string;
-  submit: string;
-  submitting: string;
-  success: string;
-  direct: string;
-  validationError: string;
-  errorTitle: string;
-  errorHelp: string;
-  directEmail: string;
-  directWhatsapp: string;
-  locationOptions: string[];
-  formatOptions: { value: "Strategic Session" | "3-Month 1:1"; label: string }[];
-  readinessOptions: string[];
 };
 
-const DEFAULT_LABELS: Labels = {
-  name: "Name",
-  email: "Email",
-  location: "Location",
-  situation: "What are you currently navigating?",
-  unclear: "What feels most unclear or stuck right now?",
-  tried: "What have you already tried to move forward?",
-  changeGoal: "What would a meaningful change look like for you in the next 1–3 months?",
-  blockers: "What has been preventing progress so far?",
-  preferredFormat: "Preferred format",
-  investmentReadiness: "Are you open to investing in structured support if there is a good fit?",
-  extraContext: "Anything else you'd like me to know (optional)",
-  submit: "Submit application",
-  submitting: "Sending...",
-  success: "Your application has been received.",
-  direct: "I’ll review your responses and get back to you within 2–3 business days.",
-  validationError: "Please complete all required fields before submitting.",
-  errorTitle: "Something went wrong while sending your application. Please try again.",
-  errorHelp: `If the issue continues, contact directly at ${EMAIL_ADDRESS}.`,
-  directEmail: EMAIL_ADDRESS,
-  directWhatsapp: "WhatsApp",
-  locationOptions: ["Europe", "Iran", "Other"],
-  formatOptions: [
-    { value: "Strategic Session", label: "Strategic Session" },
-    { value: "3-Month 1:1", label: "3-Month 1:1" },
-  ],
-  readinessOptions: ["Yes", "Not yet"],
+const INITIAL_STATE: FormState = {
+  name: "",
+  email: "",
+  location: "",
+  situation: "",
+  unclear: "",
+  tried: "",
+  changeGoal: "",
+  blockers: "",
+  preferredFormat: "Strategic Session",
+  investmentReadiness: "Yes",
+  extraContext: "",
 };
 
-export default function ApplyForm({
-  labels = DEFAULT_LABELS,
-  lang = "en",
-}: {
-  labels?: Labels;
-  lang?: "fa" | "en";
-}) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+type ApplyFormProps = {
+  lang?: "en" | "fa";
+};
+
+const COPY = {
+  en: {
+    title: "Apply to work together",
+    intro:
+      "A short application to understand your situation and determine if this work is a good fit.",
+    success:
+      "Your application has been received. I’ll get back to you within 2–3 business days.",
+    error: "Something went wrong. Please try again.",
+    basicDetails: "Basic details",
+    yourSituation: "Your situation",
+    formatAndFit: "Format and fit",
+    name: "Name",
+    email: "Email",
+    location: "Location",
+    situation: "What are you currently navigating?",
+    unclear: "What feels unclear or stuck?",
+    tried: "What have you already tried?",
+    changeGoal: "What would meaningful change look like in 1–3 months?",
+    blockers: "What is blocking progress?",
+    preferredFormat: "Preferred format",
+    investmentReadiness: "Ready to invest?",
+    extraContext: "Anything else?",
+    submit: "Submit application",
+    submitting: "Sending...",
+    fallback: "If the form does not go through:",
+    gmail: "Open in Gmail",
+    whatsapp: "WhatsApp",
+  },
+  fa: {
+    title: "درخواست همکاری",
+    intro:
+      "این فرم کوتاه برای این است که وضعیت شما را بهتر درک کنم و مشخص شود آیا این نوع همکاری برای شما مناسب هست یا نه.",
+    success: "درخواست شما دریافت شد. طی ۲ تا ۳ روز کاری با شما در تماس خواهم بود.",
+    error: "در ارسال درخواست مشکلی پیش آمد. لطفاً دوباره تلاش کنید.",
+    basicDetails: "اطلاعات اولیه",
+    yourSituation: "وضعیت شما",
+    formatAndFit: "فرمت و تناسب همکاری",
+    name: "نام",
+    email: "ایمیل",
+    location: "محل زندگی",
+    situation: "در حال حاضر بیشتر با چه موضوعی درگیر هستید؟",
+    unclear: "الان بیشترین ابهام یا گیر اصلی شما چیست؟",
+    tried: "تا الان برای جلو رفتن چه کارهایی انجام داده‌اید؟",
+    changeGoal: "در ۱ تا ۳ ماه آینده، یک تغییر معنادار برای شما چه شکلی دارد؟",
+    blockers: "چه چیزی مانع پیشرفت شما شده است؟",
+    preferredFormat: "فرمت ترجیحی",
+    investmentReadiness: "آماده سرمایه‌گذاری هستید؟",
+    extraContext: "نکته دیگری هست؟",
+    submit: "ارسال درخواست",
+    submitting: "در حال ارسال...",
+    fallback: "اگر فرم ارسال نشد، می‌توانید مستقیم در ارتباط باشید:",
+    gmail: "ارسال ایمیل از طریق Gmail",
+    whatsapp: "واتساپ",
+  },
+} as const;
+
+export default function ApplyForm({ lang = "en" }: ApplyFormProps) {
+  const copy = COPY[lang];
+  const whatsappUrl = lang === "fa" ? WHATSAPP_FA_URL : WHATSAPP_EN_URL;
+
+  const [formData, setFormData] = useState(INITIAL_STATE);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [successDetail, setSuccessDetail] = useState("");
-  const [form, setForm] = useState<ApplyPayload>({
-    name: "",
-    email: "",
-    location: "Europe",
-    situation: "",
-    unclear: "",
-    tried: "",
-    changeGoal: "",
-    blockers: "",
-    preferredFormat: "Strategic Session",
-    investmentReadiness: "Yes",
-    extraContext: "",
-    lang,
-  });
+  const [error, setError] = useState("");
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  }
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formElement = e.currentTarget;
-    if (!formElement.checkValidity()) {
-      formElement.reportValidity();
-      setError(labels.validationError);
-      setSuccess(false);
-      setSuccessDetail("");
-      return;
-    }
-
-    setLoading(true);
+    setIsSubmitting(true);
     setError("");
     setSuccess(false);
-    setSuccessDetail("");
-
-    const payload = { ...form, lang };
 
     try {
       const res = await fetch("/api/apply", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
 
-      const rawText = await res.text();
+      const raw = await res.text();
       let data: Record<string, unknown> | null = null;
 
       try {
-        data = rawText ? (JSON.parse(rawText) as Record<string, unknown>) : null;
+        data = raw ? (JSON.parse(raw) as Record<string, unknown>) : null;
       } catch {
-        data = rawText ? { rawText } : null;
+        data = { raw };
       }
 
       if (!res.ok) {
@@ -138,180 +143,236 @@ export default function ApplyForm({
           status: res.status,
           statusText: res.statusText,
           response: data,
-          payload: {
-            ...payload,
-            email: form.email ? "[redacted]" : "",
-          },
+          payload: formData,
         });
-
-        setError(
-          typeof data?.error === "string" && data.error.trim()
-            ? data.error.trim()
-            : "Something went wrong while sending your application. Please try again. If the issue continues, contact directly at saramah63@gmail.com."
-        );
-        return;
+        throw new Error(typeof data?.error === "string" ? data.error : copy.error);
       }
 
-      console.log("Apply form success", data);
       setSuccess(true);
-      setSuccessDetail(
-        typeof data?.message === "string" && data.message.trim() ? data.message.trim() : labels.direct
+      setFormData(INITIAL_STATE);
+    } catch (submitError) {
+      console.error("Apply form network/runtime error:", submitError);
+      setError(
+        submitError instanceof Error && submitError.message ? submitError.message : copy.error
       );
-      setForm({
-        name: "",
-        email: "",
-        location: "Europe",
-        situation: "",
-        unclear: "",
-        tried: "",
-        changeGoal: "",
-        blockers: "",
-        preferredFormat: "Strategic Session",
-        investmentReadiness: "Yes",
-        extraContext: "",
-        lang,
-      });
-    } catch (err) {
-      console.error("Apply form network/runtime error", err);
-      const message =
-        err instanceof Error && err.message
-          ? err.message
-          : "Something went wrong while sending your application. Please try again. If the issue continues, contact directly at saramah63@gmail.com.";
-      setError(message);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   }
 
   return (
-    <form className="form" onSubmit={onSubmit} aria-busy={loading}>
-      {success ? (
-        <div className="formStatus formStatusSuccess" role="status" aria-live="polite">
-          <p className="formStatusTitle">✔ {labels.success}</p>
-          <p className="formStatusBody">{successDetail || labels.direct}</p>
-          <p className="formStatusBody">If needed, you can also contact directly:</p>
-          <div className="formStatusLinks">
-            <a href={EMAIL_MAILTO_URL}>{labels.directEmail}</a>
-            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
-              {labels.directWhatsapp}
+    <div className="applyPageShell">
+      <div className="applyPageHeader">
+        <h1 className="applyPageTitle">{copy.title}</h1>
+        <p className="applyPageIntro">{copy.intro}</p>
+      </div>
+
+      <form onSubmit={onSubmit} className="applyFormShell">
+        {success ? (
+          <div className="applyStatusBox applyStatusBoxSuccess" role="status" aria-live="polite">
+            <p className="applyStatusTitle">✔ {copy.success}</p>
+          </div>
+        ) : null}
+
+        {error ? (
+          <div className="applyStatusBox applyStatusBoxError" role="alert">
+            <p className="applyStatusTitle">⚠ {error}</p>
+          </div>
+        ) : null}
+
+        <div className="applyFormSections">
+          <section className="applyFormGroup">
+            <h2 className="applyGroupLabel">{copy.basicDetails}</h2>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-name">
+                {copy.name}
+              </label>
+              <input
+                id="apply-name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="applyInput"
+              />
+            </div>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-email">
+                {copy.email}
+              </label>
+              <input
+                id="apply-email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="applyInput"
+              />
+            </div>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-location">
+                {copy.location}
+              </label>
+              <input
+                id="apply-location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                className="applyInput"
+              />
+            </div>
+          </section>
+
+          <section className="applyFormGroup">
+            <h2 className="applyGroupLabel">{copy.yourSituation}</h2>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-situation">
+                {copy.situation}
+              </label>
+              <textarea
+                id="apply-situation"
+                name="situation"
+                value={formData.situation}
+                onChange={handleChange}
+                required
+                rows={4}
+                className="applyTextarea"
+              />
+            </div>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-unclear">
+                {copy.unclear}
+              </label>
+              <textarea
+                id="apply-unclear"
+                name="unclear"
+                value={formData.unclear}
+                onChange={handleChange}
+                required
+                rows={4}
+                className="applyTextarea"
+              />
+            </div>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-tried">
+                {copy.tried}
+              </label>
+              <textarea
+                id="apply-tried"
+                name="tried"
+                value={formData.tried}
+                onChange={handleChange}
+                rows={4}
+                className="applyTextarea"
+              />
+            </div>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-change-goal">
+                {copy.changeGoal}
+              </label>
+              <textarea
+                id="apply-change-goal"
+                name="changeGoal"
+                value={formData.changeGoal}
+                onChange={handleChange}
+                rows={4}
+                className="applyTextarea"
+              />
+            </div>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-blockers">
+                {copy.blockers}
+              </label>
+              <textarea
+                id="apply-blockers"
+                name="blockers"
+                value={formData.blockers}
+                onChange={handleChange}
+                rows={4}
+                className="applyTextarea"
+              />
+            </div>
+          </section>
+
+          <section className="applyFormGroup">
+            <h2 className="applyGroupLabel">{copy.formatAndFit}</h2>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-format">
+                {copy.preferredFormat}
+              </label>
+              <select
+                id="apply-format"
+                name="preferredFormat"
+                value={formData.preferredFormat}
+                onChange={handleChange}
+                className="applyInput"
+              >
+                <option>Strategic Session</option>
+                <option>3-Month 1:1</option>
+              </select>
+            </div>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-investment">
+                {copy.investmentReadiness}
+              </label>
+              <select
+                id="apply-investment"
+                name="investmentReadiness"
+                value={formData.investmentReadiness}
+                onChange={handleChange}
+                className="applyInput"
+              >
+                <option>Yes</option>
+                <option>Not yet</option>
+              </select>
+            </div>
+
+            <div className="field">
+              <label className="label" htmlFor="apply-extra-context">
+                {copy.extraContext}
+              </label>
+              <textarea
+                id="apply-extra-context"
+                name="extraContext"
+                value={formData.extraContext}
+                onChange={handleChange}
+                rows={4}
+                className="applyTextarea"
+              />
+            </div>
+          </section>
+        </div>
+
+        <button type="submit" disabled={isSubmitting} className="applySubmitButton">
+          {isSubmitting ? copy.submitting : copy.submit}
+        </button>
+
+        <div className="applyContactBlock">
+          <div className="applyFallbackText">{copy.fallback}</div>
+
+          <div className="applyContactActions">
+            <a href={EMAIL_GMAIL_URL} target="_blank" rel="noreferrer">
+              {copy.gmail}
+            </a>
+            <a href={whatsappUrl} target="_blank" rel="noreferrer">
+              {copy.whatsapp}
             </a>
           </div>
+
+          <div className="applyContactEmail">{EMAIL_ADDRESS}</div>
         </div>
-      ) : null}
-
-      <div className="field">
-        <label className="label" htmlFor="name">{labels.name}</label>
-        <input className="input" id="name" required value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} />
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="email">{labels.email}</label>
-        <input className="input" id="email" type="email" required value={form.email} onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))} />
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="location">{labels.location}</label>
-        <select
-          id="location"
-          className="input"
-          value={form.location}
-          onChange={(e) => setForm((p) => ({ ...p, location: e.target.value as ApplyPayload["location"] }))}
-        >
-          {labels.locationOptions.map((opt) => (
-            <option key={opt}>{opt}</option>
-          ))}
-        </select>
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="situation">{labels.situation}</label>
-        <textarea
-          className="textarea"
-          id="situation"
-          required
-          placeholder={lang === "fa" ? "مثلاً تغییر شغل، مهاجرت، شروع یا بازسازی کسب‌وکار" : "e.g. career change, migration, starting or restructuring a business"}
-          value={form.situation}
-          onChange={(e) => setForm((p) => ({ ...p, situation: e.target.value }))}
-        />
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="unclear">{labels.unclear}</label>
-        <textarea className="textarea" id="unclear" required value={form.unclear} onChange={(e) => setForm((p) => ({ ...p, unclear: e.target.value }))} />
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="tried">{labels.tried}</label>
-        <textarea className="textarea" id="tried" required value={form.tried} onChange={(e) => setForm((p) => ({ ...p, tried: e.target.value }))} />
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="changeGoal">{labels.changeGoal}</label>
-        <textarea className="textarea" id="changeGoal" required value={form.changeGoal} onChange={(e) => setForm((p) => ({ ...p, changeGoal: e.target.value }))} />
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="blockers">{labels.blockers}</label>
-        <textarea className="textarea" id="blockers" required value={form.blockers} onChange={(e) => setForm((p) => ({ ...p, blockers: e.target.value }))} />
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="preferredFormat">{labels.preferredFormat}</label>
-        <select
-          id="preferredFormat"
-          className="input"
-          value={form.preferredFormat}
-          onChange={(e) => setForm((p) => ({ ...p, preferredFormat: e.target.value as ApplyPayload["preferredFormat"] }))}
-        >
-          {labels.formatOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="investmentReadiness">{labels.investmentReadiness}</label>
-        <select
-          id="investmentReadiness"
-          className="input"
-          value={form.investmentReadiness}
-          onChange={(e) => setForm((p) => ({ ...p, investmentReadiness: e.target.value }))}
-        >
-          {labels.readinessOptions.map((opt) => (
-            <option key={opt}>{opt}</option>
-          ))}
-        </select>
-      </div>
-
-      <div className="field">
-        <label className="label" htmlFor="extraContext">{labels.extraContext}</label>
-        <textarea className="textarea" id="extraContext" value={form.extraContext} onChange={(e) => setForm((p) => ({ ...p, extraContext: e.target.value }))} />
-      </div>
-
-      <button className="btn btnPrimary" type="submit" disabled={loading}>
-        {loading ? (
-          <span className="btnInlineStatus">
-            <span className="btnSpinner" aria-hidden="true" />
-            <span>{labels.submitting}</span>
-          </span>
-        ) : (
-          labels.submit
-        )}
-      </button>
-
-      {error ? (
-        <div className="formStatus formStatusError" role="alert">
-          <p className="formStatusTitle">⚠ {labels.errorTitle}</p>
-          <p className="formStatusBody">{error}</p>
-          <p className="formStatusBody">{labels.errorHelp}</p>
-          <div className="formStatusLinks">
-            <a href={EMAIL_MAILTO_URL}>{labels.directEmail}</a>
-            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
-              {labels.directWhatsapp}
-            </a>
-          </div>
-        </div>
-      ) : null}
-    </form>
+      </form>
+    </div>
   );
 }

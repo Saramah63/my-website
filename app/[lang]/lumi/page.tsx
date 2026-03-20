@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import EmailContactActions from "@/components/EmailContactActions";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -114,11 +115,11 @@ export default async function LumiPage({ params }: { params: Promise<{ lang: str
           </div>
           <div className="founderPanel founderQuietCard">
             <p className="founderCardLabel">Collaboration</p>
-            <div className="founderHeroActions">
-              <a className="btn btnPrimary founderButton" href="mailto:contact@saramahmodi.com">
-                Contact for collaboration
-              </a>
-            </div>
+            <EmailContactActions
+              lang="en"
+              prefix="For collaboration:"
+              className="emailContactCard"
+            />
           </div>
         </div>
       </section>
